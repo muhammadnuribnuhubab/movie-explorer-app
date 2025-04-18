@@ -1,42 +1,170 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@import 'tailwindcss';
+
+@theme {
+  /* Font Family */
+  --font-inter: 'Inter', 'sans-serif';
+
+  /* Colors */
+  --color-neutral-25: #fdfdfd;
+  --color-neutral-50: #fafafa;
+  --color-neutral-100: #f5f5f5;
+  --color-neutral-200: #e9eaeb;
+  --color-neutral-300: #d5d7da;
+  --color-neutral-400: #a4a7ae;
+  --color-neutral-500: #717680;
+  --color-neutral-600: #535862;
+  --color-neutral-700: #414651;
+  --color-neutral-800: #252b37;
+  --color-neutral-900: #181d27;
+  --color-neutral-950: #0a0d12;
+  --color-primary-100: #ead0cc;
+  --color-primary-200: #b96155;
+  --color-primary-300: #961200;
+  --color-primary-400: #640c00;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  /* Typography */
+  --font-display-3xl-size: 60px;
+  --font-display-3xl-line: 72px;
+  --font-display-2xl-size: 48px;
+  --font-display-2xl-line: 60px;
+  --font-display-xl-size: 40px;
+  --font-display-xl-line: 56px;
+  --font-display-lg-size: 36px;
+  --font-display-lg-line: 48px;
+  --font-display-md-size: 32px;
+  --font-display-md-line: 46px;
+  --font-display-sm-size: 26px;
+  --font-display-sm-line: 38px;
+  --font-display-xs-size: 24px;
+  --font-display-xs-line: 36px;
+  --font-text-xl-size: 20px;
+  --font-text-xl-line: 34px;
+  --font-text-lg-size: 18px;
+  --font-text-lg-line: 32px;
+  --font-text-md-size: 16px;
+  --font-text-md-line: 30px;
+  --font-text-sm-size: 14px;
+  --font-text-sm-line: 28px;
+  --font-text-xs-size: 12px;
+  --font-text-xs-line: 24px;
+
+  /* Radius */
+  --radius-none: 0;
+  --radius-xxs: 2px;
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 20px;
+  --radius-4xl: 24px;
+  --radius-full: 9999px;
+
+  /* Spacing */
+  --spacing-none: 0px;
+  --spacing-xxs: 2px;
+  --spacing-xs: 4px;
+  --spacing-sm: 6px;
+  --spacing-md: 8px;
+  --spacing-lg: 12px;
+  --spacing-xl: 16px;
+  --spacing-2xl: 20px;
+  --spacing-3xl: 24px;
+  --spacing-4xl: 32px;
+  --spacing-5xl: 40px;
+  --spacing-6xl: 48px;
+  --spacing-7xl: 64px;
+  --spacing-8xl: 80px;
+  --spacing-9xl: 96px;
+  --spacing-10xl: 128px;
+  --spacing-11xl: 140px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Typography */
+.display-3xl {
+  font-size: var(--font-display-3xl-size);
+  line-height: var(--font-display-3xl-line);
+}
+.display-2xl {
+  font-size: var(--font-display-2xl-size);
+  line-height: var(--font-display-2xl-line);
+}
+.display-xl {
+  font-size: var(--font-display-xl-size);
+  line-height: var(--font-display-xl-line);
+}
+.display-lg {
+  font-size: var(--font-display-lg-size);
+  line-height: var(--font-display-lg-line);
+}
+.display-md {
+  font-size: var(--font-display-md-size);
+  line-height: var(--font-display-md-line);
+}
+.display-sm {
+  font-size: var(--font-display-sm-size);
+  line-height: var(--font-display-sm-line);
+}
+.display-xs {
+  font-size: var(--font-display-xs-size);
+  line-height: var(--font-display-xs-line);
+}
+.body-text-xl {
+  font-size: var(--font-text-xl-size);
+  line-height: var(--font-text-xl-line);
+}
+.body-text-lg {
+  font-size: var(--font-text-lg-size);
+  line-height: var(--font-text-lg-line);
+}
+.body-text-md {
+  font-size: var(--font-text-md-size);
+  line-height: var(--font-text-md-line);
+}
+.body-text-sm {
+  font-size: var(--font-text-sm-size);
+  line-height: var(--font-text-sm-line);
+}
+.body-text-xs {
+  font-size: var(--font-text-xs-size);
+  line-height: var(--font-text-xs-line);
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
+/* Radius */
+.radius-none {
+  border-radius: var(--radius-none);
+}
+.radius-xxs {
+  border-radius: var(--radius-xxs);
+}
+.radius-xs {
+  border-radius: var(--radius-xs);
+}
+.radius-sm {
+  border-radius: var(--radius-sm);
+}
+.radius-md {
+  border-radius: var(--radius-md);
+}
+.radius-lg {
+  border-radius: var(--radius-lg);
+}
+.radius-xl {
+  border-radius: var(--radius-xl);
+}
+.radius-2xl {
+  border-radius: var(--radius-2xl);
+}
+.radius-3xl {
+  border-radius: var(--radius-3xl);
+}
+.radius-4xl {
+  border-radius: var(--radius-4xl);
+}
+.radius-full {
+  border-radius: var(--radius-full);
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
-}
