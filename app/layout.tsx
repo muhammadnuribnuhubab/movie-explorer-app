@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { Footer, Header } from "@/components/layout";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -20,8 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} font-inter`}>
+      <body className={`${inter.variable} font-inter bg-black`}>
+        <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
