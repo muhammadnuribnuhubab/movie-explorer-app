@@ -1,16 +1,30 @@
 'use client';
 
-import { useState } from 'react';
-import { MenuIcon, SearchIcon, CloseIcon } from '../ui/Icons';
-import { Logo } from './Logo';
-import { Search } from '../search/Search';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Logo } from './Logo';
+import { CloseIcon, MenuIcon, SearchIcon } from '../ui';
+import { Search } from '../search';
 
 export const Header = () => {
   const [showNav, setShowNav] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 0);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <header className='w-full fixed top-0 left-0 z-30'>
+    <header
+      className={`w-full fixed top-0 left-0 z-30 transition-colors duration-300 ${
+        isScrolled ? 'bg-[#0A0D1299] backdrop-blur-[40px]' : ''
+      }`}
+    >
       <div className='flex flex-col md:flex-row justify-start md:justify-between items-start md:items-center gap-2xl px-xl max-w-[1160px] md:mx-auto py-[18px] md:py-[22px]'>
         <div className='flex justify-between items-center w-full md:w-auto'>
           <div className='flex items-center 3xl md:gap-5xl lg:gap-8xl'>
