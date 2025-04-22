@@ -4,10 +4,18 @@ import { Rating } from '../ui/Rating';
 import Image from 'next/image';
 
 type FavoriteItemProps = {
+  title: string;
+  rating: number;
+  description: string;
   onRemove?: () => void;
 };
 
-export const FavoriteItem = ({ onRemove }: FavoriteItemProps) => {
+export const FavoriteItem = ({
+  title,
+  rating,
+  description,
+  onRemove,
+}: FavoriteItemProps) => {
   return (
     <div className='md:max-w-[1160px] space-y-3xl'>
       <div className='flex justify-between gap-[126px] items-center md:items-start'>
@@ -16,7 +24,7 @@ export const FavoriteItem = ({ onRemove }: FavoriteItemProps) => {
           <div className='w-[104px] h-[156px] md:w-[182px] md:h-[270px] rounded-md md:rounded-xl overflow-hidden bg-amber-600 flex-shrink-0'>
             <Image
               src='/poster.jpg'
-              alt='Captain America: Brave New World'
+              alt={title}
               width={182}
               height={270}
               className='w-full h-full object-cover'
@@ -26,17 +34,14 @@ export const FavoriteItem = ({ onRemove }: FavoriteItemProps) => {
           <div className='flex flex-col justify-start text-left w-full md:max-w-[1772px]'>
             <div className='flex flex-col gap-xs md:gap-lg'>
               <h2 className='font-bold text-[16px] md:text-[24px] text-neutral-25'>
-                Captain America: Brave New World
+                {title}
               </h2>
               <Rating
-                rating={7.9}
+                rating={rating}
                 className='font-medium !md:text-[16px] !text-neutral-25'
               />
               <p className='font-normal text-[14px] md:text-[16px] text-neutral-400 line-clamp-2'>
-                After meeting with newly elected U.S. President Thaddeus Ross,
-                Sam finds himself in the middle of an international incident.
-                This description is too long and will be cut if it exceeds the
-                image height.
+                {description}
               </p>
             </div>
 

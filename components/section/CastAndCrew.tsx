@@ -5,7 +5,7 @@ interface CastAndCrewProps {
   count?: number;
 }
 
-export const CastAndCrew = ({ count = 4 }: CastAndCrewProps) => {
+export const CastAndCrew = ({ count = 10 }: CastAndCrewProps) => {
   return (
     <div className='flex flex-col gap-4 md:gap-6'>
       <SectionTitle title='Cast & Crew' />

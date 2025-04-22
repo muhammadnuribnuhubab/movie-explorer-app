@@ -22,10 +22,10 @@ export const MovieDetail = () => {
   if (!isClient) return null;
 
   return (
-    <section className='relative min-h-[1150px] overflow-hidden md:min-h-[1500px]'>
+    <section className='relative min-h-[550px] md:min-h-[700px] overflow-hidden'>
       <MovieBackground />
 
-      <div className='absolute inset-0 z-10 mx-auto flex max-w-[1180px] flex-col justify-end gap-6 px-[18px] pt-[75%] md:gap-10'>
+      <div className='relative z-10 mx-auto flex max-w-[1180px] flex-col justify-start gap-6 px-[18px] pt-10 md:gap-10 md:pt-24'>
         <div className='flex items-start gap-4 md:gap-8'>
           <div className='w-full md:w-fit'>
             <div className='flex-shrink-0 overflow-hidden rounded-md bg-amber-600 md:rounded-xl w-[116px] h-[171px] md:w-[260px] md:h-[384px]'>

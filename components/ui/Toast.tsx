@@ -13,7 +13,7 @@ export const Toast: React.FC<ToastProps> = ({ message, type }) => {
 
   return (
     <div
-      className={`fixed top-25 md:top-40 left-1/2 transform -translate-x-1/2 flex items-center justify-center w-[285px] gap-lg px-3xl py-lg rounded-2xl ${backgroundColor} font-semibold text-md md:text-xl text-white backdrop-blur-[40px] md:w-[531px]`}
+      className={`fixed top-25 md:top-40 left-1/2 transform -translate-x-1/2 flex items-center justify-center w-[285px] gap-lg px-3xl py-lg rounded-2xl ${backgroundColor} font-semibold text-md md:text-xl text-white backdrop-blur-[40px] text-center`}
     >
       {icon}
       {message}
