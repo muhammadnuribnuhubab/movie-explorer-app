@@ -4,6 +4,6 @@ interface SectionTitleProps {
 
 export const SectionTitle = ({ title }: SectionTitleProps) => {
   return (
-    <h2 className='font-bold text-2xl text-neutral-25 md:text-4xl'>{title}</h2>
+    <h2 className='text-neutral-25 font-bold text-xl md:text-3xl'>{title}</h2>
   );
 };

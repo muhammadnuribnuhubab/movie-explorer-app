@@ -5,13 +5,13 @@ interface HeroBackgroundProps {
   alt?: string;
 }
 
-export const HeroBackground = ({
+export const MovieBackground = ({
   src = '/images/hero-banner.svg',
   alt = 'Hero Background',
 }: HeroBackgroundProps) => {
   return (
     <div className='relative -z-10 inset-0 flex justify-center'>
-      <div className='relative w-full aspect-[393/392] max-w-[1440px] md:aspect-[16/9]'>
+      <div className='relative w-full max-w-[1440px] aspect-[393/392] md:aspect-[16/9]'>
         <Image
           src={src}
           alt={alt}
