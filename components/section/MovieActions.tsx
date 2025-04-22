@@ -20,11 +20,21 @@ export const MovieActions: React.FC<MovieActionsProps> = ({
   const isMdUp = useMediaQuery('(min-width: 768px)');
   const [isFavorite, setIsFavorite] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
 
   const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
+    const newFavorite = !isFavorite;
+    setIsFavorite(newFavorite);
     setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
+    setToastMessage(
+      newFavorite
+        ? 'Success Add to Favorites'
+        : 'Success Remove from Favorites'
+    );
+
+    setTimeout(() => {
+      setShowToast(false);
+    }, 3000);
   };
 
   return (
@@ -49,7 +59,7 @@ export const MovieActions: React.FC<MovieActionsProps> = ({
       </Button>
 
       {showToast && (
-        <Toast message='Success Add to Favorites' type='success' />
+        <Toast message={toastMessage} type='success' />
       )}
     </>
   );

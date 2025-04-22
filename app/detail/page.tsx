@@ -1,6 +1,6 @@
 import { MovieDetail } from "@/components/section";
 
-export default function HomeLayout() {
+export default function MovieDetailPage() {
   return (
     <main className='mx-auto'>
       <MovieDetail />

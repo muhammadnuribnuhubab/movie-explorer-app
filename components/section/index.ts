@@ -11,3 +11,5 @@ export * from './ReleaseDate';
 export * from './MovieActions';
 export * from './MovieTitle';
 export * from './MovieMetaGroup';
+export * from './MovieMetaGroup';
+export * from '../favorite/FavoriteItem';
