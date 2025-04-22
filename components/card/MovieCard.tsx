@@ -14,11 +14,12 @@ export const MovieCard = ({
   rating,
   trendingIndex,
 }: MovieCardProps) => {
+  console.log(trendingIndex);
   return (
     <div className='w-full max-w-[173px] md:max-w-[216px] flex-shrink-0'>
       <div className='relative w-full aspect-[173/266] md:aspect-[216/321] overflow-hidden rounded-md md:rounded-xl'>
-        {typeof trendingIndex === 'number' && (
-          <div className='absolute top-[8px] md:top-[12px] left-[8px] md:left-[12px] w-[32px] md:w-[48px] h-[32px] md:h-[48px] p-[4.57px] md:p-[6.86px] rounded-full flex items-center justify-center backdrop-blur-[22.85714340209961px] bg-[#0A0D1299]'>
+        {trendingIndex != null && trendingIndex !== 0 && (
+          <div className='absolute top-[8px] md:top-[12px] left-[8px] md:left-[12px] w-[32px] md:w-[48px] h-[32px] md:h-[48px] p-[4.57px] md:p-[6.86px] rounded-full flex items-center justify-center backdrop-blur-[22.85714340209961px] bg-[#0A0D1299] z-1'>
             <span className='font-semibold text-[12px] md:text-[14px] leading-[16px] md:leading-[20px] text-neutral-25'>
               {trendingIndex}
             </span>

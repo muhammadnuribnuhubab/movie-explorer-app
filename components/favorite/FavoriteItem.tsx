@@ -17,7 +17,7 @@ export const FavoriteItem = ({
   onRemove,
 }: FavoriteItemProps) => {
   return (
-    <div className='md:max-w-[1160px] space-y-3xl'>
+    <div className='md:max-w-[1160px] '>
       <div className='flex justify-between gap-[126px] items-center md:items-start'>
         <div className='flex justify-between items-center md:items-start gap-2xl md:gap-3xl'>
           {/* Kolom 1: Poster */}
@@ -64,7 +64,7 @@ export const FavoriteItem = ({
         </div>
       </div>
 
-      <div className='flex justify-between items-center gap-xl md:hidden'>
+      <div className='flex justify-between items-center gap-xl md:hidden mt-8'>
         <Button className='w-full'>
           Watch Trailer <PlayIcon size={18} />
         </Button>

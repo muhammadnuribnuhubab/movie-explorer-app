@@ -9,6 +9,7 @@ import type { Swiper as SwiperType } from 'swiper';
 import { SectionTitle } from './SectionTitle';
 import { ChevronLeftIcon, ChevronRightIcon } from '../ui';
 import { MovieCard } from '../card';
+import Link from 'next/link'; // Import Link
 
 type TrendingNowProps = {
   title: string;
@@ -37,6 +38,10 @@ export const TrendingNow = ({
       swiperRef.current.navigation.update();
     }
   }, []);
+
+  useEffect(() => {
+    console.log('Trending movies:', movies);
+  }, [movies]);
 
   return (
     <section
@@ -92,12 +97,15 @@ export const TrendingNow = ({
       >
         {movies.map((movie) => (
           <SwiperSlide key={movie.id}>
-            <MovieCard
-              imageUrl={movie.imageUrl}
-              title={movie.title}
-              rating={movie.rating}
-              trendingIndex={movie.trendingIndex}
-            />
+            {/* Link untuk menuju halaman detail */}
+            <Link href={`/detail/${movie.id}`} passHref>
+              <MovieCard
+                imageUrl={movie.imageUrl}
+                title={movie.title}
+                rating={movie.rating}
+                trendingIndex={movie.trendingIndex} // ✅ tambahkan ini
+              />
+            </Link>
           </SwiperSlide>
         ))}
       </Swiper>

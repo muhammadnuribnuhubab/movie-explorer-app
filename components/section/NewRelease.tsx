@@ -4,16 +4,12 @@ import { useState, useEffect } from 'react';
 import { MovieCard } from '../card';
 import { SectionTitle } from './SectionTitle';
 import { Button } from '../ui';
+import type { FormattedMovie } from '@/types/movie';
 
 type NewReleasesProps = {
   title: string;
   className?: string;
-  movies: {
-    id: string;
-    title: string;
-    imageUrl: string;
-    rating: number;
-  }[];
+  movies: FormattedMovie[];
 };
 
 export const NewRelease = ({
@@ -40,9 +36,9 @@ export const NewRelease = ({
 
   useEffect(() => {
     if (windowWidth >= 768) {
-      setVisibleCount(15);
+      setVisibleCount(15); // Mulai dengan 15 pada tampilan besar
     } else {
-      setVisibleCount(8);
+      setVisibleCount(8); // Mulai dengan 8 pada tampilan kecil
     }
   }, [windowWidth]);
 
@@ -69,7 +65,7 @@ export const NewRelease = ({
         <div className='mt-6 flex justify-center'>
           {windowWidth < 768 ? (
             <Button
-              onClick={() => setVisibleCount((prev) => prev + 10)}
+              onClick={() => setVisibleCount((prev) => prev + 15)} // Menambahkan lebih banyak film
               variant='secondary'
               className='!w-[200px] md:hidden'
             >
@@ -77,7 +73,7 @@ export const NewRelease = ({
             </Button>
           ) : (
             <Button
-              onClick={() => setVisibleCount((prev) => prev + 10)}
+              onClick={() => setVisibleCount((prev) => prev + 30)} // Menambahkan lebih banyak film untuk layar besar
               variant='secondary'
               size='lg'
               className='hidden md:inline-flex'

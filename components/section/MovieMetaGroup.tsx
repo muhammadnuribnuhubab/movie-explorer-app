@@ -2,7 +2,12 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import { MovieMeta } from './MovieMeta';
 import { HappyFaceIcon, StarInlineIcon, VideoIcon } from '../ui';
 
-export const MovieMetaGroup = () => {
+type MovieMetaGroupProps = {
+  rating?: number;
+  genres?: string[];
+};
+
+export const MovieMetaGroup = ({ rating, genres }: MovieMetaGroupProps) => {
   const isMdUp = useMediaQuery('(min-width: 768px)');
   const iconSize = isMdUp ? 32 : 24;
 
@@ -10,13 +15,13 @@ export const MovieMetaGroup = () => {
     {
       icon: <StarInlineIcon size={iconSize} />,
       label: 'Rating',
-      value: 6.2,
+      value: rating ?? 'N/A',  // Menampilkan rating jika ada, jika tidak ada tampilkan 'N/A'
       className: 'text-[#E4A802]',
     },
     {
       icon: <VideoIcon size={iconSize} />,
       label: 'Genre',
-      value: 'Action',
+      value: genres?.join(', ') ?? 'Unknown',  // Gabungkan genre menjadi string jika ada
     },
     {
       icon: <HappyFaceIcon size={iconSize} />,
