@@ -5,9 +5,10 @@ import { HappyFaceIcon, StarInlineIcon, VideoIcon } from '../ui';
 type MovieMetaGroupProps = {
   rating?: number;
   genres?: string[];
+  age?: number;
 };
 
-export const MovieMetaGroup = ({ rating, genres }: MovieMetaGroupProps) => {
+export const MovieMetaGroup = ({ rating, genres, age }: MovieMetaGroupProps) => {
   const isMdUp = useMediaQuery('(min-width: 768px)');
   const iconSize = isMdUp ? 32 : 24;
 
@@ -26,12 +27,12 @@ export const MovieMetaGroup = ({ rating, genres }: MovieMetaGroupProps) => {
     {
       icon: <HappyFaceIcon size={iconSize} />,
       label: 'Age Limit',
-      value: 13,
+      value: age ? `${age}+` : 'N/A',  // Menampilkan batas usia jika ada, jika tidak ada tampilkan 'N/A'
     },
   ];
 
   return (
-    <div className='hidden md:flex gap-4'>
+    <div className='w-full flex gap-4'>
       {metaData.map((item, index) => (
         <MovieMeta
           key={index}

@@ -14,7 +14,6 @@ export const MovieCard = ({
   rating,
   trendingIndex,
 }: MovieCardProps) => {
-  console.log(trendingIndex);
   return (
     <div className='w-full max-w-[173px] md:max-w-[216px] flex-shrink-0'>
       <div className='relative w-full aspect-[173/266] md:aspect-[216/321] overflow-hidden rounded-md md:rounded-xl'>
@@ -31,6 +30,7 @@ export const MovieCard = ({
           alt={title}
           fill
           className='object-cover bg-amber-800'
+          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
         />
       </div>
       <div className='mt-2 text-left'>

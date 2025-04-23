@@ -11,11 +11,11 @@ import {
 import { Toast } from '../ui/Toast';
 
 interface MovieActionsProps {
-  hasTrailer: boolean;
+  trailerUrl?: string; // ubah dari boolean jadi string
 }
 
 export const MovieActions: React.FC<MovieActionsProps> = ({
-  hasTrailer = true,
+  trailerUrl,
 }) => {
   const isMdUp = useMediaQuery('(min-width: 768px)');
   const [isFavorite, setIsFavorite] = useState(false);
@@ -37,10 +37,19 @@ export const MovieActions: React.FC<MovieActionsProps> = ({
     }, 3000);
   };
 
+  const handleWatchTrailer = () => {
+    if (trailerUrl) {
+      window.open(trailerUrl, '_blank'); // buka di tab baru
+    }
+  };
+
   return (
     <>
-      {hasTrailer && (
-        <Button className='w-full md:!w-[220px] md:!h-[52px] md:!text-base gap-2'>
+      {trailerUrl && (
+        <Button
+          onClick={handleWatchTrailer}
+          className='w-full md:!w-[220px] md:!h-[52px] md:!text-base gap-2'
+        >
           Watch Trailer
           <PlayIcon size={isMdUp ? 24 : 18} />
         </Button>

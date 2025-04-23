@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/compat/router';
-
 import Image from 'next/image';
 import {
   CastAndCrew,
@@ -19,9 +17,18 @@ type MovieDetailProps = {
   releaseDate: string;
   overview: string;
   posterUrl: string;
+  backdropUrl: string;
   rating?: number;
   genres?: string[];
+  age?: number;
   trailerUrl?: string;
+  cast: {
+    id: number;
+    name: string;
+    character: string;
+    profile_path?: string;
+  }[];
+  crew: { id: number; name: string; job: string; profile_path?: string }[];
 };
 
 export const MovieDetail = ({
@@ -29,23 +36,28 @@ export const MovieDetail = ({
   releaseDate,
   overview,
   posterUrl,
+  backdropUrl,
   rating,
   genres,
+  age,
   trailerUrl,
+  cast,
+  crew,
 }: MovieDetailProps) => {
   const [isClient, setIsClient] = useState(false);
-  const router = useRouter(); // Ensure useRouter is only called in the client
 
-  // Client-side only logic
   useEffect(() => {
-    setIsClient(true); // Flag indicating the component is mounted in the client
+    setIsClient(true);
   }, []);
 
-  if (!isClient) return null; // Render only after the client-side has hydrated
+  if (!isClient) return null;
 
   return (
     <section className='relative min-h-[550px] md:min-h-[700px] overflow-hidden'>
-      <MovieBackground />
+      <MovieBackground
+        src={backdropUrl} // ✅ gunakan backdrop dari props
+        alt={title}
+      />
 
       <div className='relative z-10 mx-auto flex max-w-[1180px] flex-col justify-start gap-6 px-[18px] pt-10 md:gap-10'>
         <div className='flex items-start gap-4 md:gap-8'>
@@ -56,7 +68,6 @@ export const MovieDetail = ({
                 alt={title}
                 width={260}
                 height={384}
-                layout='responsive' // Added responsive layout for better flexibility
                 className='h-full w-full object-cover'
               />
             </div>
@@ -75,27 +86,25 @@ export const MovieDetail = ({
               </div>
 
               <div className='hidden gap-4 md:flex'>
-                <MovieActions hasTrailer={!!trailerUrl} />
+                <MovieActions trailerUrl={trailerUrl} />
               </div>
 
-              <div className='hidden gap-3 md:flex md:gap-4'>
-                <MovieMetaGroup rating={rating} genres={genres} />
+              <div className='hidden md:flex gap-3 md:gap-4'>
+                <MovieMetaGroup rating={rating} genres={genres} age={age} />
               </div>
             </div>
           </div>
         </div>
 
         <div className='flex items-center gap-4 md:hidden'>
-          <MovieActions hasTrailer={!!trailerUrl} />
+          <MovieActions trailerUrl={trailerUrl} />
         </div>
 
         <div className='flex gap-3 md:hidden'>
-          <MovieMetaGroup rating={rating} genres={genres} />
+          <MovieMetaGroup rating={rating} genres={genres} age={age} />
         </div>
-
         <Overview description={overview} />
-
-        <CastAndCrew />
+        <CastAndCrew cast={cast} crew={crew} />
       </div>
     </section>
   );

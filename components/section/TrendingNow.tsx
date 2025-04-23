@@ -9,7 +9,8 @@ import type { Swiper as SwiperType } from 'swiper';
 import { SectionTitle } from './SectionTitle';
 import { ChevronLeftIcon, ChevronRightIcon } from '../ui';
 import { MovieCard } from '../card';
-import Link from 'next/link'; // Import Link
+import { useRouter } from 'next/navigation'; // ✅ App Router
+import page from '@/app/page';
 
 type TrendingNowProps = {
   title: string;
@@ -31,6 +32,7 @@ export const TrendingNow = ({
   const [isBeginning, setIsBeginning] = useState(true);
   const [isEnd, setIsEnd] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
+  const router = useRouter(); // ✅
 
   useEffect(() => {
     if (swiperRef.current && swiperRef.current.navigation) {
@@ -39,19 +41,15 @@ export const TrendingNow = ({
     }
   }, []);
 
-  useEffect(() => {
-    console.log('Trending movies:', movies);
-  }, [movies]);
-
   return (
     <section
       className={`relative max-w-[1180px] mx-auto px-[18px] ${className}`}
     >
       <SectionTitle title={title} />
 
-      {/* Tombol panah kiri */}
+      {/* Panah navigasi */}
       <button
-        className={`flex items-center justify-center absolute top-[45%] left-0 z-10 w-11 h-11 md:w-14 md:h-14 rounded-full bg-neutral-800/70 text-white hover:bg-neutral-700 transition-opacity ${
+        className={`flex justify-center items-center absolute top-[45%] left-0 z-10 w-11 h-11 md:w-14 md:h-14 rounded-full bg-neutral-800/70 text-white hover:bg-neutral-700 transition-opacity ${
           isBeginning ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
         id='swiper-prev'
@@ -59,9 +57,8 @@ export const TrendingNow = ({
         <ChevronLeftIcon size={18} className='md:size-5' />
       </button>
 
-      {/* Tombol panah kanan */}
       <button
-        className={`flex items-center justify-center absolute top-[45%] right-0 z-10 w-11 h-11 md:w-14 md:h-14 rounded-full bg-neutral-800/70 text-white hover:bg-neutral-700 transition-opacity ${
+        className={`flex justify-center items-center absolute top-[45%] right-0 z-10 w-11 h-11 md:w-14 md:h-14 rounded-full bg-neutral-800/70 text-white hover:bg-neutral-700 transition-opacity ${
           isEnd ? 'opacity-0 pointer-events-none' : 'opacity-100'
         }`}
         id='swiper-next'
@@ -95,17 +92,21 @@ export const TrendingNow = ({
         modules={[Navigation]}
         className='mt-6 md:mt-10'
       >
-        {movies.map((movie) => (
-          <SwiperSlide key={movie.id}>
-            {/* Link untuk menuju halaman detail */}
-            <Link href={`/detail/${movie.id}`} passHref>
+        {movies.map((movie, index) => (
+          <SwiperSlide
+            key={`${movie.id}-${movie.trendingIndex ?? index}-${page}`}
+          >
+            <div
+              className='cursor-pointer'
+              onClick={() => router.push(`/detail/${movie.id}`)}
+            >
               <MovieCard
                 imageUrl={movie.imageUrl}
                 title={movie.title}
                 rating={movie.rating}
-                trendingIndex={movie.trendingIndex} // ✅ tambahkan ini
+                trendingIndex={movie.trendingIndex}
               />
-            </Link>
+            </div>
           </SwiperSlide>
         ))}
       </Swiper>

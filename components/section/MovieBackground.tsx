@@ -6,7 +6,7 @@ interface HeroBackgroundProps {
 }
 
 export const MovieBackground = ({
-  src = '/images/hero-banner.svg',
+  src = '',
   alt = 'Hero Background',
 }: HeroBackgroundProps) => {
   return (
