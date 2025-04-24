@@ -1,3 +1,4 @@
+// app/favorites/page.tsx
 import { FavoriteList } from '@/components/favorite';
 
 export default function FavoritesPage() {

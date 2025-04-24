@@ -1,4 +1,4 @@
-import { FormattedMovie } from '@/types/movie';
+import { FormattedMovie, TMDBMovie } from '@/types/movie';
 import axios from 'axios';
 
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN;
@@ -29,25 +29,26 @@ export const fetchNewReleases = async (
   page: number
 ): Promise<FormattedMovie[]> => {
   try {
-    const response = await axios.get(`${BASE_URL}/movie/now_playing`, {
-      headers: {
-        Authorization: `Bearer ${ACCESS_TOKEN}`,
-        accept: 'application/json',
-      },
-      params: { page },
-    });
-
-    const formatted = response.data.results.map(
-      (movie: any, index: number) => ({
-        id: movie.id.toString(),
-        title: movie.title,
-        imageUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-        rating: Number(movie.vote_average),
-        trendingIndex: index + 1,
-      })
+    const response = await axios.get<{ results: TMDBMovie[] }>(
+      `${BASE_URL}/movie/now_playing`,
+      {
+        headers: {
+          Authorization: `Bearer ${ACCESS_TOKEN}`,
+          accept: 'application/json',
+        },
+        params: { page },
+      }
     );
 
-    return formatted;
+    const valid = response.data.results.filter((m) => m.poster_path);
+
+    return valid.map((movie, index) => ({
+      id: movie.id.toString(),
+      title: movie.title,
+      imageUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+      rating: Number(movie.vote_average),
+      trendingIndex: index + 1,
+    }));
   } catch (error) {
     console.error('Error fetching new releases:', error);
     return [];

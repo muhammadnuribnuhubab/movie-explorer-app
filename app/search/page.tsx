@@ -1,77 +1,130 @@
 'use client';
 
+import { useMemo, useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { FavoriteItem } from '@/components/section';
 import { EmptyContent } from '@/components/section/EmptyContent';
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useMovieContext } from '@/contexts/MovieContext';
+import { useFavorites } from '@/contexts/FavoriteContext';
+import type { FormattedMovie } from '@/types/movie';
+import { Toast } from '@/components/ui';
 
 const SearchPage = () => {
+  const { newReleases, trendingMovies, movieDetails, fetchMovieDetail } =
+    useMovieContext();
+  const { favoriteMovies, addFavorite, removeFavorite } = useFavorites();
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
+
   const searchParams = useSearchParams();
-  const query = searchParams.get('q') || '';
   const router = useRouter();
+  const rawQuery = searchParams.get('q');
+  const query = (rawQuery ?? '').trim().toLowerCase();
 
-  if (!query) {
-    router.push('/');
-    return null;
-  }
+  const movies: FormattedMovie[] = useMemo(() => {
+    const combined = [...trendingMovies, ...newReleases];
+    const uniqueMap = new Map<string, FormattedMovie>();
+    combined.forEach((movie) => {
+      if (!uniqueMap.has(movie.id)) {
+        uniqueMap.set(movie.id, movie);
+      }
+    });
+    return Array.from(uniqueMap.values());
+  }, [trendingMovies, newReleases]);
 
-  const handleSearch = (query: string) => {
-    const results = [
-      {
-        title: 'Captain America: Brave New World',
-        rating: 7.9,
-        description:
-          'After meeting with newly elected U.S. President Thaddeus Ross...',
-      },
-      {
-        title: 'Batman Begins',
-        rating: 8.3,
-        description:
-          'After the murder of his parents, billionaire playboy Bruce Wayne...',
-      },
-      {
-        title: 'Spider-Man: No Way Home',
-        rating: 8.0,
-        description:
-          'With Spider-Man’s identity now revealed, Peter asks Doctor Strange for help...',
-      },
-    ].filter((movie) =>
-      movie.title.toLowerCase().includes(query.toLowerCase())
-    );
+  const searchResults = useMemo(() => {
+    return query
+      ? movies.filter((m) => m.title.toLowerCase().includes(query))
+      : [];
+  }, [query, movies]);
 
-    return results;
+  useEffect(() => {
+    if (!query) {
+      router.push('/search');
+    }
+  }, [query, router]);
+
+  useEffect(() => {
+    searchResults.forEach((movie) => {
+      if (!movieDetails[movie.id]) {
+        fetchMovieDetail(movie.id);
+      }
+    });
+  }, [searchResults]);
+
+  const isFavorite = (id: string) =>
+    favoriteMovies.some((fav) => fav.id === id);
+
+  const handleToggleFavorite = (
+    movie: FormattedMovie,
+    detail?: { description?: string; trailerUrl?: string }
+  ) => {
+    const fullMovie = {
+      id: movie.id,
+      title: movie.title,
+      rating: movie.rating,
+      description: detail?.description || movie.description,
+      posterUrl: movie.posterUrl,
+      trailerUrl: detail?.trailerUrl || '',
+    };
+
+    if (isFavorite(movie.id)) {
+      removeFavorite(movie.id);
+      setToastMessage('Removed from favorites');
+    } else {
+      addFavorite(fullMovie);
+      setToastMessage('Added to favorites');
+    }
+
+    setTimeout(() => setToastMessage(null), 3000);
   };
-
-  const searchResults = handleSearch(query);
 
   return (
     <section className='relative pt-[70px] md:pt-[110px] px-xl max-w-[1160px] mx-auto'>
-      <h2 className='text-xl font-bold'>
-        Search Results for &quot;{query}&quot;
-      </h2>
       <div className='mt-4'>
-        {searchResults.length === 0 ? (
-          <div className='text-center justify-center items-center text-white text-lg md:text-xl py-16 flex flex-col mx-auto'>
-            <div className='flex flex-col items-center justify-center gap-6'>
-              <EmptyContent
-                title='Data Not Found'
-                description="Try other keywords"
-                imageSrc='/images/not-found.svg'
-              />
-            </div>
+        {!query ? (
+          <div className='text-center text-white text-lg py-16'>
+            <EmptyContent
+              title='No Search Query'
+              description='Please enter a keyword to search movies.'
+              imageSrc='/images/not-found.svg'
+            />
+          </div>
+        ) : searchResults.length === 0 ? (
+          <div className='text-center text-white text-lg py-16'>
+            <EmptyContent
+              title='Data Not Found'
+              description='Try other keywords'
+              imageSrc='/images/not-found.svg'
+            />
           </div>
         ) : (
-          <div className='space-y-4'>
-            {searchResults.map((result, index) => (
-              <FavoriteItem
-                key={index}
-                title={result.title}
-                rating={result.rating}
-                description={result.description}
-              />
-            ))}
+          <div className='space-y-4xl'>
+            {searchResults.map((movie, index) => {
+              const detail = movieDetails[movie.id];
+
+              return (
+                <div key={movie.id}>
+                  <FavoriteItem
+                    id={movie.id}
+                    title={movie.title}
+                    rating={movie.rating}
+                    description={detail?.description || movie.description}
+                    posterUrl={movie.imageUrl}
+                    trailerUrl={detail?.trailerUrl || ''}
+                    isFavorite={isFavorite(movie.id)}
+                    onToggleFavorite={() => handleToggleFavorite(movie, detail)}
+                  />
+                  {index !== searchResults.length - 1 && (
+                    <hr className='mt-8 md:mt-12 border-neutral-800' />
+                  )}
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
+
+      {toastMessage && <Toast message={toastMessage} type='success' />}
     </section>
   );
 };

@@ -2,6 +2,8 @@ import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
 import { Footer, Header } from '@/components/layout';
+import { FavoriteProvider } from '@/contexts/FavoriteContext';
+import { MovieProvider } from '@/contexts/MovieContext';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -23,9 +25,13 @@ export default function RootLayout({
       <body
         className={`${inter.variable} font-inter bg-black suppressHydrationWarning`}
       >
-        <Header />
-        {children}
-        <Footer />
+        <MovieProvider>
+          <FavoriteProvider>
+            <Header />
+            {children}
+            <Footer />
+          </FavoriteProvider>
+        </MovieProvider>
       </body>
     </html>
   );

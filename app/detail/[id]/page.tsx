@@ -1,3 +1,4 @@
+// pages/detail/[id]/page.tsx (atau file serupa)
 'use client';
 
 import { MovieDetail } from '@/components/section';
@@ -6,14 +7,15 @@ import { useParams } from 'next/navigation';
 import { fetchMovieDetail } from '@/lib/api/tmdb';
 
 type MovieDetailProps = {
+  id: string;
   title: string;
   releaseDate: string;
   overview: string;
   posterUrl: string;
   backdropUrl: string;
-  rating?: number;
-  genres?: string[];
-  age?: number;
+  rating: number;
+  genres: string[];
+  age: number;
   trailerUrl?: string;
   cast: { id: number; name: string; character: string; profile_path?: string }[];
   crew: { id: number; name: string; job: string; profile_path?: string }[];
@@ -30,6 +32,7 @@ const MovieDetailPage = () => {
       try {
         const data = await fetchMovieDetail(id);
         setMovie({
+          id: data.id.toString(),
           title: data.title,
           releaseDate: data.release_date,
           overview: data.overview,
@@ -50,7 +53,7 @@ const MovieDetailPage = () => {
             profile_path: c.profile_path,
           })),
           crew: data.credits.crew
-            .filter((c: any) => ['Director','Producer','Writer'].includes(c.job))
+            .filter((c: any) => ['Director', 'Producer', 'Writer'].includes(c.job))
             .map((c: any) => ({
               id: c.id,
               name: c.name,

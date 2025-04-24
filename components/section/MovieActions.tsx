@@ -2,45 +2,55 @@
 
 import { useState } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import {
-  Button,
-  HeartInlineIcon,
-  HeartOutlineIcon,
-  PlayIcon,
-} from '../ui';
+import { Button, HeartInlineIcon, HeartOutlineIcon, PlayIcon } from '../ui';
 import { Toast } from '../ui/Toast';
+import { useFavorites } from '@/contexts/FavoriteContext';
 
 interface MovieActionsProps {
-  trailerUrl?: string; // ubah dari boolean jadi string
+  trailerUrl?: string;
+  movieId: string;
+  movieTitle: string;
+  movieRating: number;
+  movieDescription: string;
+  posterUrl: string; // terima posterUrl juga
 }
 
 export const MovieActions: React.FC<MovieActionsProps> = ({
   trailerUrl,
+  movieId,
+  movieTitle,
+  movieRating,
+  movieDescription,
+  posterUrl,
 }) => {
   const isMdUp = useMediaQuery('(min-width: 768px)');
-  const [isFavorite, setIsFavorite] = useState(false);
+  const { favoriteMovies, addFavorite, removeFavorite } = useFavorites();
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState('');
 
-  const toggleFavorite = () => {
-    const newFavorite = !isFavorite;
-    setIsFavorite(newFavorite);
-    setShowToast(true);
-    setToastMessage(
-      newFavorite
-        ? 'Success Add to Favorites'
-        : 'Success Remove from Favorites'
-    );
+  const isFavorite = favoriteMovies.some((m) => m.id === movieId);
 
-    setTimeout(() => {
-      setShowToast(false);
-    }, 3000);
+  const handleFavoriteToggle = () => {
+    if (isFavorite) {
+      removeFavorite(movieId);
+      setToastMessage('Removed from Favorites');
+    } else {
+      addFavorite({
+        id: movieId,
+        title: movieTitle,
+        rating: movieRating,
+        description: movieDescription,
+        posterUrl,
+        trailerUrl
+      });
+      setToastMessage('Added to Favorites');
+    }
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
   };
 
   const handleWatchTrailer = () => {
-    if (trailerUrl) {
-      window.open(trailerUrl, '_blank'); // buka di tab baru
-    }
+    if (trailerUrl) window.open(trailerUrl, '_blank', 'noopener,noreferrer');
   };
 
   return (
@@ -48,16 +58,16 @@ export const MovieActions: React.FC<MovieActionsProps> = ({
       {trailerUrl && (
         <Button
           onClick={handleWatchTrailer}
-          className='w-full md:!w-[220px] md:!h-[52px] md:!text-base gap-2'
+          className='w-full md:!w-[220px] !gap-2'
         >
-          Watch Trailer
-          <PlayIcon size={isMdUp ? 24 : 18} />
+          Watch Trailer <PlayIcon size={isMdUp ? 24 : 18} />
         </Button>
       )}
 
       <Button
-        onClick={toggleFavorite}
+        onClick={handleFavoriteToggle}
         variant='secondary'
+        aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
         className='!w-[44px] !h-[44px] md:!w-[52px] md:!h-[52px]'
       >
         {isFavorite ? (
@@ -67,9 +77,7 @@ export const MovieActions: React.FC<MovieActionsProps> = ({
         )}
       </Button>
 
-      {showToast && (
-        <Toast message={toastMessage} type='success' />
-      )}
+      {showToast && <Toast message={toastMessage} type='success' />}
     </>
   );
 };
