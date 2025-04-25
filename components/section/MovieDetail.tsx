@@ -94,7 +94,7 @@ export const MovieDetail = ({
             transition={{ delay: 0.3, duration: 0.5 }}
             className='flex flex-col justify-end gap-4 md:gap-8 md:w-full mt-auto'
           >
-            <div className='hidden md:flex flex-col gap-4'>
+            <div className='hidden md:flex flex-col'>
               <MovieTitle title={title} />
               <ReleaseDate date={releaseDate} />
             </div>
