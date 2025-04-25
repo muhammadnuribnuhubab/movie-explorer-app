@@ -17,6 +17,8 @@ export const MovieCard = ({
   rating,
   trendingIndex,
 }: MovieCardProps) => {
+  // console.log(imageUrl); // Memastikan URL gambar sudah benar
+
   return (
     <motion.div
       className='w-full max-w-[173px] md:max-w-[216px] flex-shrink-0 cursor-pointer'

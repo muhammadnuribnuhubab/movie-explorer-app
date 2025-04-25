@@ -30,6 +30,7 @@ function loadFromSession<T>(key: string): T | null {
 export default function HomePage() {
   const [trendingMovies, setTrendingMovies] = useState<FormattedMovie[]>([]);
   const [newReleases, setNewReleases] = useState<FormattedMovie[]>([]);
+  // console.log(newReleases);
   const [topMovie, setTopMovie] = useState<Movie | null>(null);
   const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
   const [newReleasesPage, setNewReleasesPage] = useState(1);
@@ -144,9 +145,10 @@ export default function HomePage() {
         transition={{ delay: 0.3, duration: 0.5 }}
       >
         <NewRelease
+          title='New Releases'
           movies={newReleases}
-          title='New Release'
           onLoadMore={handleLoadMore}
+     
         />
       </motion.div>
     </main>

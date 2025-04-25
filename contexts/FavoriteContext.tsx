@@ -1,15 +1,14 @@
-// context/FavoriteContext.tsx
 'use client';
 
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
 
 export type Movie = {
   id: string;
   title: string;
   rating: number;
   description: string;
-  posterUrl: string; // tambahkan posterUrl
-  trailerUrl?: string; // tambahkan trailerUrl
+  posterUrl: string;
+  trailerUrl?: string;
 };
 
 type FavoriteContextType = {
@@ -18,21 +17,30 @@ type FavoriteContextType = {
   removeFavorite: (id: string) => void;
 };
 
-const FavoriteContext = createContext<FavoriteContextType | undefined>(
-  undefined
-);
+const FavoriteContext = createContext<FavoriteContextType | undefined>(undefined);
 
 export const useFavorites = () => {
   const ctx = useContext(FavoriteContext);
-  if (!ctx)
-    throw new Error('useFavorites must be used within FavoriteProvider');
+  if (!ctx) throw new Error('useFavorites must be used within FavoriteProvider');
   return ctx;
 };
 
 export const FavoriteProvider = ({ children }: { children: ReactNode }) => {
   const [favoriteMovies, setFavoriteMovies] = useState<Movie[]>([]);
 
-  // contexts/FavoriteContext.tsx
+  // 🔁 Load dari localStorage saat pertama kali komponen dimount
+  useEffect(() => {
+    const stored = localStorage.getItem('favoriteMovies');
+    if (stored) {
+      setFavoriteMovies(JSON.parse(stored));
+    }
+  }, []);
+
+  // 💾 Simpan ke localStorage setiap kali favoriteMovies berubah
+  useEffect(() => {
+    localStorage.setItem('favoriteMovies', JSON.stringify(favoriteMovies));
+  }, [favoriteMovies]);
+
   const addFavorite = (movie: Movie) => {
     console.log('Adding movie:', movie.id);
     setFavoriteMovies((prev) => {

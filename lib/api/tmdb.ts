@@ -25,35 +25,51 @@ export const fetchTrendingMovies = async () => {
 };
 
 // Ambil daftar film yang baru tayang, dengan paging
-export const fetchNewReleases = async (
-  page: number
-): Promise<FormattedMovie[]> => {
-  try {
-    const response = await axios.get<{ results: TMDBMovie[] }>(
-      `${BASE_URL}/movie/now_playing`,
-      {
-        headers: {
-          Authorization: `Bearer ${ACCESS_TOKEN}`,
-          accept: 'application/json',
-        },
-        params: { page },
-      }
-    );
+// Ambil daftar film yang baru tayang, tanpa batasan paging
+export const fetchNewReleases = async (): Promise<FormattedMovie[]> => {
+  const allMovies: FormattedMovie[] = [];
+  let currentPage = 1;
+  let hasMoreData = true;
 
-    const valid = response.data.results.filter((m) => m.poster_path);
+  while (hasMoreData) {
+    try {
+      const response = await axios.get<{ results: TMDBMovie[] }>(
+        `${BASE_URL}/movie/now_playing`,
+        {
+          headers: {
+            Authorization: `Bearer ${ACCESS_TOKEN}`,
+            accept: 'application/json',
+          },
+          params: { page: currentPage },
+        }
+      );
 
-    return valid.map((movie, index) => ({
-      id: movie.id.toString(),
-      title: movie.title,
-      imageUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-      rating: Number(movie.vote_average),
-      trendingIndex: index + 1,
-    }));
-  } catch (error) {
-    console.error('Error fetching new releases:', error);
-    return [];
+      const validMovies = response.data.results.filter((m) => m.poster_path);
+
+      const mappedMovies: FormattedMovie[] = validMovies.map((m) => ({
+        id: m.id.toString(),
+        title: m.title,
+        imageUrl: `https://image.tmdb.org/t/p/w500${m.poster_path}`,
+        rating: Number(m.vote_average).toFixed(2),
+        description: m.overview,
+      }));
+
+      allMovies.push(...mappedMovies);
+
+      hasMoreData = currentPage < response.data.total_pages;
+      currentPage++;
+    } catch (error) {
+      console.error('Error fetching new releases:', error);
+      hasMoreData = false;
+    }
   }
+
+  console.log(allMovies)
+
+  return allMovies;
 };
+
+
 
 // Fungsi untuk load lebih banyak film
 export const loadMoreNewReleases = async (

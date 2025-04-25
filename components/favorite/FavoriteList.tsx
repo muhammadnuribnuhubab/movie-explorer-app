@@ -30,7 +30,7 @@ export const FavoriteList = () => {
 
   return (
     <section className='pt-[70px] md:pt-[110px] px-xl max-w-[1160px] mx-auto'>
-      <SectionTitle title='Favorites' className='mb-4 md:mb-8' />
+      <SectionTitle title='Favorites' className='mb-6 md:mb-8' />
 
       {favoriteMovies.length === 0 ? (
         <div className='text-center text-white py-16'>

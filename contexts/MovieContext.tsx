@@ -8,14 +8,32 @@ import {
   fetchMovieDetail as tmdbFetchMovieDetail,
 } from '@/lib/api/tmdb';
 
-// Extend FormattedMovie to include description and trailerUrl
+const STORAGE_KEYS = {
+  newReleasesPage: 'newReleasesPage',
+  newReleasesData: 'newReleasesData',
+};
+
+function saveToSession(key: string, value: unknown) {
+  if (typeof window !== 'undefined') {
+    sessionStorage.setItem(key, JSON.stringify(value));
+  }
+}
+
+function loadFromSession<T>(key: string): T | null {
+  if (typeof window === 'undefined') return null;
+  const item = sessionStorage.getItem(key);
+  return item ? (JSON.parse(item) as T) : null;
+}
+
 interface MovieContextType {
   trendingMovies: FormattedMovie[];
   newReleases: FormattedMovie[];
   movieDetails: { [id: string]: FormattedMovie };
+  newReleasesPage: number;
   fetchTrending: () => Promise<void>;
   fetchNewReleases: (page?: number) => Promise<void>;
   fetchMovieDetail: (id: string) => Promise<void>;
+  handleLoadMore: () => void;
 }
 
 const MovieContext = createContext<MovieContextType | undefined>(undefined);
@@ -24,6 +42,16 @@ export const MovieProvider: React.FC<React.PropsWithChildren> = ({ children }) =
   const [trendingMovies, setTrendingMovies] = useState<FormattedMovie[]>([]);
   const [newReleases, setNewReleases] = useState<FormattedMovie[]>([]);
   const [movieDetails, setMovieDetails] = useState<{ [id: string]: FormattedMovie }>({});
+  const [newReleasesPage, setNewReleasesPage] = useState<number>(1);
+
+  useEffect(() => {
+    // Restore page & data from session storage
+    const savedPage = loadFromSession<number>(STORAGE_KEYS.newReleasesPage);
+    const savedData = loadFromSession<FormattedMovie[]>(STORAGE_KEYS.newReleasesData);
+
+    if (savedPage) setNewReleasesPage(savedPage);
+    if (savedData) setNewReleases(savedData);
+  }, []);
 
   const fetchTrending = async (): Promise<void> => {
     const raw = await tmdbFetchTrendingMovies();
@@ -33,7 +61,7 @@ export const MovieProvider: React.FC<React.PropsWithChildren> = ({ children }) =
       imageUrl: `https://image.tmdb.org/t/p/w500${m.poster_path}`,
       rating: m.vote_average,
       description: m.overview,
-      trailerUrl: '', // default empty, fill when detail fetched
+      trailerUrl: '',
       trendingIndex: idx + 1,
     }));
     setTrendingMovies(formatted);
@@ -50,14 +78,22 @@ export const MovieProvider: React.FC<React.PropsWithChildren> = ({ children }) =
       trailerUrl: '',
       trendingIndex: idx + 1,
     }));
-    setNewReleases(prev => [...prev, ...formatted]);
+
+    setNewReleases((prev) => {
+      // Merge and deduplicate by id
+      const all = [...prev, ...formatted];
+      const unique = all.filter((m, idx, arr) => arr.findIndex((x) => x.id === m.id) === idx);
+      saveToSession(STORAGE_KEYS.newReleasesData, unique);
+      return unique;
+    });
+    setNewReleasesPage(page);
+    saveToSession(STORAGE_KEYS.newReleasesPage, page);
   };
 
   const fetchMovieDetail = async (id: string): Promise<void> => {
     const data = await tmdbFetchMovieDetail(id);
     if (data) {
-      const trailer = data.videos?.results.find((v: any) => v.type === 'Trailer')
-        || data.videos?.results[0];
+      const trailer = data.videos?.results.find((v: any) => v.type === 'Trailer') || data.videos?.results[0];
       const formatted: FormattedMovie = {
         id: data.id.toString(),
         title: data.title,
@@ -66,14 +102,19 @@ export const MovieProvider: React.FC<React.PropsWithChildren> = ({ children }) =
         description: data.overview,
         trailerUrl: trailer ? `https://www.youtube.com/watch?v=${trailer.key}` : '',
       };
-      setMovieDetails(prev => ({ ...prev, [id]: formatted }));
+      setMovieDetails((prev) => ({ ...prev, [id]: formatted }));
     }
   };
 
+  const handleLoadMore = () => {
+    setNewReleasesPage((prev) => prev + 1);
+  };
+
   useEffect(() => {
-    fetchTrending();
-    fetchNewReleases();
-  }, []);
+    if (newReleasesPage > 1 || newReleases.length === 0) {
+      fetchNewReleases(newReleasesPage);
+    }
+  }, [newReleasesPage, newReleases.length]);
 
   return (
     <MovieContext.Provider
@@ -81,9 +122,11 @@ export const MovieProvider: React.FC<React.PropsWithChildren> = ({ children }) =
         trendingMovies,
         newReleases,
         movieDetails,
+        newReleasesPage,
         fetchTrending,
         fetchNewReleases,
         fetchMovieDetail,
+        handleLoadMore,
       }}
     >
       {children}

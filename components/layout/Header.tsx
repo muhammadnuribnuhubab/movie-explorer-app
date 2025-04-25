@@ -18,7 +18,18 @@ export const Header = () => {
   const [query, setQuery] = useState('');
   const router = useRouter();
 
+  useEffect(() => {
+    if (state.showNav) {
+      document.body.classList.add('overflow-hidden');
+    } else {
+      document.body.classList.remove('overflow-hidden');
+    }
 
+    // Clean up saat komponen unmount (opsional, tapi bagus)
+    return () => {
+      document.body.classList.remove('overflow-hidden');
+    };
+  }, [state.showNav]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,7 +67,11 @@ export const Header = () => {
   return (
     <header
       className={`w-full fixed top-0 left-0 z-30 transition-colors duration-300 ${
-        isScrolled ? 'bg-[#0A0D1299] backdrop-blur-[40px]' : ''
+        showNav
+          ? 'bg-black'
+          : isScrolled
+          ? 'bg-[#0A0D1299] backdrop-blur-[40px]'
+          : ''
       }`}
     >
       <div className='flex flex-col md:flex-row justify-between items-center gap-2xl px-xl max-w-[1160px] md:mx-auto py-[18px] md:py-[22px]'>

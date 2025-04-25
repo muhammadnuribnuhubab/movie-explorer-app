@@ -50,7 +50,9 @@ export const NewRelease = ({
     setVisibleCount((prev) => prev + (windowWidth >= 768 ? 60 : 30)); // Tambahkan lebih banyak film tergantung pada ukuran layar
     onLoadMore(); // Memanggil fungsi load more untuk memuat lebih banyak data
   };
+ 
 
+  // console.log(movies)
   return (
     <section className={`mx-auto mt-12 max-w-[1180px] px-[18px] ${className}`}>
       <SectionTitle title={title} />

@@ -13,6 +13,7 @@ interface MovieActionsProps {
   movieRating: number;
   movieDescription: string;
   posterUrl: string; // terima posterUrl juga
+  className?: string;
 }
 
 export const MovieActions: React.FC<MovieActionsProps> = ({
@@ -41,7 +42,7 @@ export const MovieActions: React.FC<MovieActionsProps> = ({
         rating: movieRating,
         description: movieDescription,
         posterUrl,
-        trailerUrl
+        trailerUrl,
       });
       setToastMessage('Added to Favorites');
     }
@@ -54,7 +55,7 @@ export const MovieActions: React.FC<MovieActionsProps> = ({
   };
 
   return (
-    <>
+    <div className='flex gap-4 md:gap-6'>
       {trailerUrl && (
         <Button
           onClick={handleWatchTrailer}
@@ -78,6 +79,6 @@ export const MovieActions: React.FC<MovieActionsProps> = ({
       </Button>
 
       {showToast && <Toast message={toastMessage} type='success' />}
-    </>
+    </div>
   );
 };
