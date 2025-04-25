@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import Image from 'next/image';
 
 interface HeroBackgroundProps {
@@ -10,7 +11,12 @@ export const MovieBackground = ({
   alt = 'Hero Background',
 }: HeroBackgroundProps) => {
   return (
-    <div className='relative -z-10 inset-0 flex justify-center'>
+    <motion.div
+      className='relative -z-10 inset-0 flex justify-center'
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 1.2, ease: 'easeOut' }}
+    >
       <div className='relative w-full max-w-[1440px] aspect-[393/392] md:aspect-[16/9]'>
         <Image
           src={src}
@@ -21,6 +27,6 @@ export const MovieBackground = ({
         />
         <div className='absolute inset-0 bg-gradient-to-b from-transparent to-black/90' />
       </div>
-    </div>
+    </motion.div>
   );
 };

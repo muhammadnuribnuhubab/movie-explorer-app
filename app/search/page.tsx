@@ -8,6 +8,7 @@ import { useMovieContext } from '@/contexts/MovieContext';
 import { useFavorites } from '@/contexts/FavoriteContext';
 import type { FormattedMovie } from '@/types/movie';
 import { Toast } from '@/components/ui';
+import { motion } from 'framer-motion'; // Import motion from framer-motion
 
 const SearchPage = () => {
   const { newReleases, trendingMovies, movieDetails, fetchMovieDetail } =
@@ -98,12 +99,22 @@ const SearchPage = () => {
             />
           </div>
         ) : (
-          <div className='space-y-4xl'>
+          <motion.div
+            className='space-y-4xl'
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
             {searchResults.map((movie, index) => {
               const detail = movieDetails[movie.id];
 
               return (
-                <div key={movie.id}>
+                <motion.div
+                  key={movie.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, ease: 'easeOut' }}
+                >
                   <FavoriteItem
                     id={movie.id}
                     title={movie.title}
@@ -117,10 +128,10 @@ const SearchPage = () => {
                   {index !== searchResults.length - 1 && (
                     <hr className='mt-8 md:mt-12 border-neutral-800' />
                   )}
-                </div>
+                </motion.div>
               );
             })}
-          </div>
+          </motion.div>
         )}
       </div>
 

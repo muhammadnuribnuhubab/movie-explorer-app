@@ -8,6 +8,7 @@ import {
   fetchMovieVideos,
 } from '@/lib/api/tmdb';
 import type { Movie, FormattedMovie } from '@/types/movie';
+import { AnimatePresence, motion } from 'framer-motion';
 
 const STORAGE_KEYS = {
   newReleasesPage: 'newReleasesPage',
@@ -115,13 +116,39 @@ export default function HomePage() {
 
   return (
     <main className='mx-auto'>
-      {topMovie && <HeroBanner movie={topMovie} trailerUrl={trailerUrl} />}
-      <TrendingNow movies={trendingMovies} title='Trending Now' />
-      <NewRelease
-        movies={newReleases}
-        title='New Release'
-        onLoadMore={handleLoadMore}
-      />
+      <AnimatePresence>
+        {topMovie && (
+          <motion.div
+            key='hero'
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            <HeroBanner movie={topMovie} trailerUrl={trailerUrl} />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
+        <TrendingNow movies={trendingMovies} title='Trending Now' />
+      </motion.div>
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+      >
+        <NewRelease
+          movies={newReleases}
+          title='New Release'
+          onLoadMore={handleLoadMore}
+        />
+      </motion.div>
     </main>
   );
 }

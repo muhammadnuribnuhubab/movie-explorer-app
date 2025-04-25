@@ -1,5 +1,3 @@
-// components/favorite/FavoriteList.tsx
-
 'use client';
 
 import { FavoriteItem } from '../favorite/FavoriteItem';
@@ -10,6 +8,7 @@ import { SectionTitle } from '../section/SectionTitle';
 import { Toast } from '../ui/Toast';
 import { useFavorites } from '@/contexts/FavoriteContext';
 import { Fragment, useState } from 'react';
+import { motion } from 'framer-motion';
 
 export const FavoriteList = () => {
   const { favoriteMovies, removeFavorite } = useFavorites();
@@ -47,33 +46,44 @@ export const FavoriteList = () => {
           </Link>
         </div>
       ) : (
-        <div className='flex flex-col gap-8'>
+        <motion.div
+          className='flex flex-col gap-8'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, ease: 'easeOut' }}
+        >
           {favoriteMovies.map((movie) => (
             <Fragment key={movie.id}>
-              <FavoriteItem
-                id={movie.id}
-                title={movie.title}
-                rating={movie.rating}
-                description={movie.description}
-                posterUrl={movie.posterUrl}
-                trailerUrl={movie.trailerUrl}
-                onWatch={() => handleWatch(movie.trailerUrl)}
-                onRemove={() => handleRemove(movie.id)}
-                isFavorite={isFavorite(movie.id)}
-                onToggleFavorite={() => {
-                  const fullMovie = {
-                    id: movie.id,
-                    title: movie.title,
-                    rating: movie.rating,
-                    description: movie.description,
-                    posterUrl: movie.posterUrl,
-                    trailerUrl: movie.trailerUrl,
-                  };
-                }}
-              />
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+              >
+                <FavoriteItem
+                  id={movie.id}
+                  title={movie.title}
+                  rating={movie.rating}
+                  description={movie.description}
+                  posterUrl={movie.posterUrl}
+                  trailerUrl={movie.trailerUrl}
+                  onWatch={() => handleWatch(movie.trailerUrl)}
+                  onRemove={() => handleRemove(movie.id)}
+                  isFavorite={isFavorite(movie.id)}
+                  onToggleFavorite={() => {
+                    const fullMovie = {
+                      id: movie.id,
+                      title: movie.title,
+                      rating: movie.rating,
+                      description: movie.description,
+                      posterUrl: movie.posterUrl,
+                      trailerUrl: movie.trailerUrl,
+                    };
+                  }}
+                />
+              </motion.div>
             </Fragment>
           ))}
-        </div>
+        </motion.div>
       )}
 
       {toastMessage && <Toast message={toastMessage} type='success' />}

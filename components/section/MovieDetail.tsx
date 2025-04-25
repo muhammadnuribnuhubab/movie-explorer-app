@@ -1,4 +1,3 @@
-// components/section/MovieDetail.tsx
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -12,6 +11,7 @@ import {
   ReleaseDate,
 } from '.';
 import { MovieActions } from './MovieActions';
+import { motion } from 'framer-motion';
 
 type MovieDetailProps = {
   id: string;
@@ -60,9 +60,19 @@ export const MovieDetail = ({
     >
       <MovieBackground src={backdropUrl} alt={title} />
 
-      <div className='relative z-10 mx-auto flex max-w-[1180px] flex-col gap-6 px-[18px] pt-10 md:gap-10'>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
+        className='relative z-10 mx-auto flex max-w-[1180px] flex-col gap-6 px-[18px] pt-10 md:gap-10'
+      >
         {/* Poster, Title, ReleaseDate */}
-        <div className='flex items-start gap-4 md:gap-8'>
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className='flex items-start gap-4 md:gap-8'
+        >
           <div className='w-full md:w-fit'>
             <Image
               src={posterUrl}
@@ -70,7 +80,7 @@ export const MovieDetail = ({
               width={260}
               height={384}
               className='rounded-md'
-              style={{ height: 'auto', width: 'auto' }} // Tambahkan ini kalau kamu ubah width
+              style={{ height: 'auto', width: 'auto' }}
             />
             <div className='mt-3 md:hidden'>
               <MovieTitle title={title} />
@@ -78,7 +88,12 @@ export const MovieDetail = ({
             </div>
           </div>
 
-          <div className='flex flex-col justify-end gap-4 md:gap-8 md:w-full mt-auto'>
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3, duration: 0.5 }}
+            className='flex flex-col justify-end gap-4 md:gap-8 md:w-full mt-auto'
+          >
             <div className='hidden md:flex flex-col gap-4'>
               <MovieTitle title={title} />
               <ReleaseDate date={releaseDate} />
@@ -98,11 +113,16 @@ export const MovieDetail = ({
             <div className='hidden md:flex gap-4'>
               <MovieMetaGroup rating={rating} genres={genres} age={age} />
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Mobile MovieActions */}
-        <div className='flex flex-col gap-4 md:hidden'>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 0.5 }}
+          className='flex flex-col gap-4 md:hidden'
+        >
           <MovieActions
             trailerUrl={trailerUrl}
             movieId={id}
@@ -112,11 +132,24 @@ export const MovieDetail = ({
             posterUrl={posterUrl}
           />
           <MovieMetaGroup rating={rating} genres={genres} age={age} />
-        </div>
+        </motion.div>
 
-        <Overview description={overview} />
-        <CastAndCrew cast={cast} crew={crew} />
-      </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+        >
+          <Overview description={overview} />
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6, duration: 0.5 }}
+        >
+          <CastAndCrew cast={cast} crew={crew} />
+        </motion.div>
+      </motion.div>
     </section>
   );
 };

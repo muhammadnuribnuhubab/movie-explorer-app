@@ -1,5 +1,8 @@
+'use client';
+
 import Image from 'next/image';
 import { Rating } from '../ui';
+import { motion } from 'framer-motion';
 
 type MovieCardProps = {
   imageUrl: string;
@@ -15,7 +18,16 @@ export const MovieCard = ({
   trendingIndex,
 }: MovieCardProps) => {
   return (
-    <div className='w-full max-w-[173px] md:max-w-[216px] flex-shrink-0'>
+    <motion.div
+      className='w-full max-w-[173px] md:max-w-[216px] flex-shrink-0 cursor-pointer'
+      initial={{ opacity: 0, y: 30 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{
+        scale: 0.95,
+        boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.2)',
+      }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
       <div className='relative w-full aspect-[173/266] md:aspect-[216/321] overflow-hidden rounded-md md:rounded-xl'>
         {trendingIndex != null && trendingIndex !== 0 && (
           <div className='absolute top-[8px] md:top-[12px] left-[8px] md:left-[12px] w-[32px] md:w-[48px] h-[32px] md:h-[48px] p-[4.57px] md:p-[6.86px] rounded-full flex items-center justify-center backdrop-blur-[22.85714340209961px] bg-[#0A0D1299] z-1'>
@@ -39,6 +51,6 @@ export const MovieCard = ({
         </h3>
         <Rating rating={rating} />
       </div>
-    </div>
+    </motion.div>
   );
 };
