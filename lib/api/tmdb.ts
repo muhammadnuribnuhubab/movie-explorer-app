@@ -64,8 +64,6 @@ export const fetchNewReleases = async (): Promise<FormattedMovie[]> => {
     }
   }
 
-  console.log(allMovies)
-
   return allMovies;
 };
 

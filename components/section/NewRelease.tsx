@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation'; // ✅ Tambahkan ini
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 import { MovieCard } from '../card';
 import { SectionTitle } from './SectionTitle';
 import { Button } from '../ui';
@@ -11,7 +11,8 @@ type NewReleasesProps = {
   title: string;
   className?: string;
   movies: FormattedMovie[];
-  onLoadMore: () => void; // Menambahkan props untuk load more
+  onLoadMore: () => void;
+  isLoading: boolean;
 };
 
 export const NewRelease = ({
@@ -19,40 +20,45 @@ export const NewRelease = ({
   className = '',
   movies,
   onLoadMore,
+  isLoading,
 }: NewReleasesProps) => {
-  const [visibleCount, setVisibleCount] = useState(8); // Jumlah film yang akan ditampilkan
-  const [windowWidth, setWindowWidth] = useState<number>(0); // Ukuran jendela
-  const isAllVisible = visibleCount >= movies.length; // Cek jika semua film sudah ditampilkan
-  const router = useRouter(); // ✅ Router untuk navigasi
+  const [visibleCount, setVisibleCount] = useState(8);
+  const [windowWidth, setWindowWidth] = useState<number>(0);
+  const isAllVisible = visibleCount >= movies.length;
+  const router = useRouter();
+
+  const initialized = useRef(false);
 
   useEffect(() => {
     const handleResize = () => {
-      setWindowWidth(window.innerWidth); // Menyesuaikan ukuran jendela
+      setWindowWidth(window.innerWidth);
     };
 
-    handleResize();
-    window.addEventListener('resize', handleResize); // Menambahkan event listener resize
-
-    return () => {
-      window.removeEventListener('resize', handleResize); // Menghapus event listener resize saat komponen dibersihkan
-    };
+    handleResize(); // set initial width
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  // Ambil dari sessionStorage saat pertama kali mount
   useEffect(() => {
-    if (windowWidth >= 768) {
-      setVisibleCount(15); // Untuk layar besar, tampilkan 15 film
-    } else {
-      setVisibleCount(8); // Untuk layar kecil, tampilkan 8 film
+    if (!initialized.current) {
+      initialized.current = true;
+
+      const savedCount = sessionStorage.getItem('visibleNewRelease');
+      const defaultCount = window.innerWidth >= 768 ? 15 : 8;
+
+      setVisibleCount(savedCount ? Number(savedCount) : defaultCount);
     }
-  }, [windowWidth]);
+  }, []);
 
   const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + (windowWidth >= 768 ? 60 : 30)); // Tambahkan lebih banyak film tergantung pada ukuran layar
-    onLoadMore(); // Memanggil fungsi load more untuk memuat lebih banyak data
+    const increment = window.innerWidth >= 768 ? 60 : 30;
+    const newCount = visibleCount + increment;
+    setVisibleCount(newCount);
+    sessionStorage.setItem('visibleNewRelease', String(newCount));
+    onLoadMore();
   };
- 
 
-  // console.log(movies)
   return (
     <section className={`mx-auto mt-12 max-w-[1180px] px-[18px] ${className}`}>
       <SectionTitle title={title} />
@@ -60,7 +66,7 @@ export const NewRelease = ({
       <div className='relative mt-6 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
         {movies.slice(0, visibleCount).map((movie) => (
           <div
-            key={movie.id} // Use movie.id as the unique key
+            key={movie.id}
             className='cursor-pointer'
             onClick={() => router.push(`/detail/${movie.id}`)}
           >
@@ -71,32 +77,28 @@ export const NewRelease = ({
             />
           </div>
         ))}
-
         {!isAllVisible && (
           <div className='absolute bottom-0 left-0 right-0 h-150 bg-gradient-to-t from-black to-transparent md:h-160' />
         )}
       </div>
 
-      {!isAllVisible && (
+      {isLoading && (
+        <div className='text-center py-6 text-sm md:text-base text-neutral-25 animate-pulse'>
+          <span className='inline-block mr-2 animate-spin'>🎬</span>
+          Loading new releases...
+        </div>
+      )}
+
+      {!isAllVisible && !isLoading && (
         <div className='mt-6 flex justify-center'>
-          {windowWidth < 768 ? (
-            <Button
-              onClick={handleLoadMore} // Panggil handleLoadMore saat tombol diklik
-              variant='secondary'
-              className='!w-[200px] md:hidden'
-            >
-              Load More
-            </Button>
-          ) : (
-            <Button
-              onClick={handleLoadMore} // Panggil handleLoadMore saat tombol diklik
-              variant='secondary'
-              size='lg'
-              className='hidden md:inline-flex'
-            >
-              Load More
-            </Button>
-          )}
+          <Button
+            onClick={handleLoadMore}
+            variant='secondary'
+            size='lg'
+            className='hidden md:inline-flex'
+          >
+            Load More
+          </Button>
         </div>
       )}
     </section>

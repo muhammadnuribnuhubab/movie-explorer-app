@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { HeroBanner, NewRelease, TrendingNow } from '@/components/section';
 import {
   fetchTrendingMovies,
@@ -9,10 +9,12 @@ import {
 } from '@/lib/api/tmdb';
 import type { Movie, FormattedMovie } from '@/types/movie';
 import { AnimatePresence, motion } from 'framer-motion';
+import { Button, ChevronLeftIcon } from '@/components/ui';
 
 const STORAGE_KEYS = {
   newReleasesPage: 'newReleasesPage',
   newReleasesData: 'newReleasesData',
+  scrollYHome: 'scrollYHome', // Tambahan key untuk scroll
 };
 
 function saveToSession(key: string, value: unknown) {
@@ -30,22 +32,71 @@ function loadFromSession<T>(key: string): T | null {
 export default function HomePage() {
   const [trendingMovies, setTrendingMovies] = useState<FormattedMovie[]>([]);
   const [newReleases, setNewReleases] = useState<FormattedMovie[]>([]);
-  // console.log(newReleases);
   const [topMovie, setTopMovie] = useState<Movie | null>(null);
   const [trailerUrl, setTrailerUrl] = useState<string | null>(null);
   const [newReleasesPage, setNewReleasesPage] = useState(1);
+  const [isFetchingNewReleases, setIsFetchingNewReleases] = useState(false);
+  const [isAtBottom, setIsAtBottom] = useState(false); // Menambahkan state untuk deteksi scroll
 
-  // restore page & data
+  const [isNearBottom, setIsNearBottom] = useState(false); // NEW
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const innerHeight = window.innerHeight;
+      const scrollHeight = document.documentElement.scrollHeight;
+
+      setIsNearBottom(scrollY + innerHeight >= scrollHeight - 100); // 100px sebelum bawah
+      setIsAtBottom(scrollY + innerHeight >= scrollHeight - 10); // benar-benar di bawah
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const bottomRef = useRef<HTMLDivElement | null>(null);
+
+  // Restore scroll position
+  useEffect(() => {
+    const savedScrollY = sessionStorage.getItem(STORAGE_KEYS.scrollYHome);
+    if (savedScrollY) {
+      window.scrollTo({ top: Number(savedScrollY), behavior: 'instant' });
+    }
+
+    const saveScroll = () => {
+      sessionStorage.setItem(
+        STORAGE_KEYS.scrollYHome,
+        window.scrollY.toString()
+      );
+    };
+
+    window.addEventListener('beforeunload', saveScroll);
+    return () => window.removeEventListener('beforeunload', saveScroll);
+  }, []);
+
+  // Check if user is at the bottom of the page
+  useEffect(() => {
+    const handleScroll = () => {
+      const nearBottom =
+        window.innerHeight + window.scrollY >= document.body.offsetHeight - 200; // 200px before bottom
+      setIsAtBottom(nearBottom);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  // Load halaman & data new release dari session
   useEffect(() => {
     const savedPage = loadFromSession<number>(STORAGE_KEYS.newReleasesPage);
+    if (savedPage) setNewReleasesPage(savedPage);
+
     const savedData = loadFromSession<FormattedMovie[]>(
       STORAGE_KEYS.newReleasesData
     );
-    if (savedPage) setNewReleasesPage(savedPage);
     if (savedData) setNewReleases(savedData);
   }, []);
 
-  // fetch trending sekali
   useEffect(() => {
     const getTrending = async () => {
       try {
@@ -62,7 +113,6 @@ export default function HomePage() {
         }));
         setTrendingMovies(formatted);
 
-        // ambil trailer untuk topMovie
         const vids = await fetchMovieVideos(raw[0].id);
         const trailer =
           vids.find(
@@ -81,17 +131,14 @@ export default function HomePage() {
     getTrending();
   }, []);
 
-  // fetch new releases tiap page change
   useEffect(() => {
     const getNew = async () => {
+      setIsFetchingNewReleases(true);
       try {
-        // **fetchNewReleases** sudah mengembalikan FormattedMovie[]
         const fetched: FormattedMovie[] = await fetchNewReleases(
           newReleasesPage
         );
-
         setNewReleases((prev) => {
-          // gabung + dedupe by id
           const all = [...prev, ...fetched];
           const unique = all.filter(
             (m, idx, arr) => arr.findIndex((x) => x.id === m.id) === idx
@@ -102,10 +149,11 @@ export default function HomePage() {
         saveToSession(STORAGE_KEYS.newReleasesPage, newReleasesPage);
       } catch (e) {
         console.error('Error fetching new releases:', e);
+      } finally {
+        setIsFetchingNewReleases(false);
       }
     };
 
-    // jalankan sekali: kalau page >1 atau belum ada data
     if (newReleasesPage > 1 || newReleases.length === 0) {
       getNew();
     }
@@ -113,6 +161,14 @@ export default function HomePage() {
 
   const handleLoadMore = () => {
     setNewReleasesPage((p) => p + 1);
+  };
+
+  const scrollToBottom = () => {
+    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
@@ -148,9 +204,23 @@ export default function HomePage() {
           title='New Releases'
           movies={newReleases}
           onLoadMore={handleLoadMore}
-     
+          isLoading={isFetchingNewReleases}
         />
       </motion.div>
+
+      {/* Tombol Scroll ke Bawah atau Kembali ke Atas */}
+      <Button variant={'secondary'}
+        onClick={isAtBottom ? scrollToTop : scrollToBottom}
+        className={`fixed right-4 2xl:right-auto 2xl:left-1/2 2xl:translate-x-[calc(590px-100%)] p-3 text-white rounded-full shadow-lg !w-[44px] flex items-center justify-center z-50 transition-all duration-300 ${
+          isNearBottom ? 'bottom-24' : 'bottom-4'
+        }`}
+        aria-label={isAtBottom ? 'Scroll to top' : 'Scroll to bottom'}
+      >
+        {isAtBottom ? (<ChevronLeftIcon className="rotate-90" />) : (<ChevronLeftIcon className="rotate-270" />)}
+      </Button>
+
+      {/* Elemen Target Scroll */}
+      <div ref={bottomRef} />
     </main>
   );
 }

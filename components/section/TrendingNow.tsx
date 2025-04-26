@@ -7,9 +7,9 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import type { Swiper as SwiperType } from 'swiper';
 import { SectionTitle } from './SectionTitle';
-import { ChevronLeftIcon, ChevronRightIcon } from '../ui';
+import { Button, ChevronLeftIcon, ChevronRightIcon } from '../ui';
 import { MovieCard } from '../card';
-import { useRouter } from 'next/navigation'; // ✅ App Router
+import { useRouter } from 'next/navigation';
 import page from '@/app/page';
 
 type TrendingNowProps = {
@@ -29,17 +29,17 @@ export const TrendingNow = ({
   movies,
   className = '',
 }: TrendingNowProps) => {
-  const [isBeginning, setIsBeginning] = useState(true);
+  const [isBeginning, setIsBeginning] = useState(false);
   const [isEnd, setIsEnd] = useState(false);
   const swiperRef = useRef<SwiperType | null>(null);
-  const router = useRouter(); // ✅
+  const router = useRouter();
 
   useEffect(() => {
-    if (swiperRef.current && swiperRef.current.navigation) {
-      swiperRef.current.navigation.init();
-      swiperRef.current.navigation.update();
+    if (swiperRef.current) {
+      setIsBeginning(swiperRef.current.isBeginning);
+      setIsEnd(swiperRef.current.isEnd);
     }
-  }, []);
+  }, [movies]); // Pastikan effect ini dipanggil setiap kali daftar movies berubah
 
   return (
     <section
@@ -47,24 +47,27 @@ export const TrendingNow = ({
     >
       <SectionTitle title={title} />
 
-      {/* Panah navigasi */}
-      <button
-        className={`flex justify-center items-center absolute top-[45%] left-0 z-10 w-11 h-11 md:w-14 md:h-14 rounded-full bg-neutral-800/70 text-white hover:bg-neutral-700 transition-opacity ${
-          isBeginning ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      {/* Chevron left */}
+      <Button variant={'secondary'}
+        className={`flex justify-center items-center absolute top-[45%] left-0 z-10 !w-[44px] rounded-full  text-white border border-neutral-800 hover:bg-neutral-700 transition-opacity ${
+          isBeginning ? '!opacity-0 pointer-events-none' : 'opacity-100'
         }`}
         id='swiper-prev'
       >
-        <ChevronLeftIcon size={18} className='md:size-5' />
-      </button>
+        <ChevronLeftIcon size={24} />
+      </Button>
 
-      <button
-        className={`flex justify-center items-center absolute top-[45%] right-0 z-10 w-11 h-11 md:w-14 md:h-14 rounded-full bg-neutral-800/70 text-white hover:bg-neutral-700 transition-opacity ${
-          isEnd ? 'opacity-0 pointer-events-none' : 'opacity-100'
+      {/* Chevron right */}
+      <Button variant={'secondary'}
+        className={`flex justify-center items-center absolute top-[45%] right-0 z-10 !w-[44px]  rounded-full  text-white hover:bg-neutral-700 transition-opacity ${
+          isEnd || movies.length <= 1
+            ? '!opacity-0 pointer-events-none'
+            : 'opacity-100'
         }`}
         id='swiper-next'
       >
-        <ChevronRightIcon size={18} className='md:size-5' />
-      </button>
+        <ChevronRightIcon size={24} />
+      </Button>
 
       <Swiper
         spaceBetween={16}

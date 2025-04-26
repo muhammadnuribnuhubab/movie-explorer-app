@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { Logo } from './Logo';
 import { ArrowLeftIcon, CloseIcon, MenuIcon, SearchIcon } from '../ui';
@@ -17,6 +17,9 @@ export const Header = () => {
 
   const [query, setQuery] = useState('');
   const router = useRouter();
+
+  // Menambahkan useRef untuk fokus ke input
+  const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     if (state.showNav) {
@@ -64,6 +67,17 @@ export const Header = () => {
     router.push(`/search?q=${value}`);
   };
 
+  // Fokus input saat ikon pencarian diklik
+  const handleSearchIconClick = () => {
+    setState((prevState) => ({ ...prevState, isSearchActive: true }));
+  };
+
+  useEffect(() => {
+    if (state.isSearchActive && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [state.isSearchActive]);
+
   return (
     <header
       className={`w-full fixed top-0 left-0 z-30 transition-colors duration-300 ${
@@ -93,7 +107,7 @@ export const Header = () => {
               <SearchIcon
                 size={24}
                 className='text-white cursor-pointer'
-                onClick={() => setState({ ...state, isSearchActive: true })}
+                onClick={handleSearchIconClick} // Menambahkan fungsi untuk fokus input
               />
               <MenuIcon
                 size={24}
@@ -112,7 +126,12 @@ export const Header = () => {
             >
               <ArrowLeftIcon size={24} />
             </button>
-            <Search size='small' onSearch={handleSearch} className='!w-full' />
+            <Search
+              size='small'
+              onSearch={handleSearch}
+              className='!w-full'
+              inputRef={inputRef} // Menyambungkan ref ke input
+            />
           </div>
         )}
 

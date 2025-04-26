@@ -33,7 +33,7 @@ export const SearchResultsGrid = ({
   }
 
   return (
-    <section className={`pt-[70px] md:pt-[110px] mx-auto max-w-[1180px] px-[18px] ${className}`}>
+    <section className={`${className}`}>
       <SectionTitle title={title} />
 
       <div className='mt-6 md:mt-8 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
