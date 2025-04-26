@@ -90,65 +90,70 @@ const SearchPage = () => {
   }, [query, router]);
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <section className='pt-[70px] md:pt-[110px] px-xl max-w-[1160px] mx-auto'>
-        {!query || searchResults.length === 0 ? (
-          <SectionTitle title='Search' />
-        ) : null}
-        <div>
-          {!query ? (
-            <div className='text-center text-white text-lg py-16'>
-              <EmptyContent
-                title='No Search Query'
-                description='Please enter a keyword to search movies.'
-                imageSrc='/images/not-found.svg'
-              />
-            </div>
-          ) : searchResults.length === 0 ? (
-            <div className='text-center text-white text-lg py-16'>
-              <EmptyContent
-                title='Data Not Found'
-                description='Try other keywords'
-                imageSrc='/images/not-found.svg'
-              />
-            </div>
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
-            >
-              <SearchResultsGrid
-                title={`Search results for: ${query}`}
-                movies={searchResults}
-              />
-            </motion.div>
-          )}
-        </div>
-
-        {searchResults.length > 0 && (
-          <>
-            <Button
-              variant={'secondary'}
-              onClick={isAtBottom ? scrollToTop : scrollToBottom}
-              className={`fixed right-4 2xl:right-auto 2xl:left-1/2 2xl:translate-x-[calc(590px-100%)] p-3 text-white rounded-full shadow-lg !w-[44px] flex items-center justify-center z-50 transition-all duration-300 ${
-                isNearBottom ? 'bottom-24' : 'bottom-4'
-              }`}
-              aria-label={isAtBottom ? 'Scroll to top' : 'Scroll to bottom'}
-            >
-              {isAtBottom ? (
-                <ChevronLeftIcon className='rotate-90' />
-              ) : (
-                <ChevronLeftIcon className='rotate-270' />
-              )}
-            </Button>
-
-            <div ref={bottomRef} />
-          </>
+    <section className='pt-[70px] md:pt-[110px] px-xl max-w-[1160px] mx-auto'>
+      {!query || searchResults.length === 0 ? (
+        <SectionTitle title='Search' />
+      ) : null}
+      <div>
+        {!query ? (
+          <div className='text-center text-white text-lg py-16'>
+            <EmptyContent
+              title='No Search Query'
+              description='Please enter a keyword to search movies.'
+              imageSrc='/images/not-found.svg'
+            />
+          </div>
+        ) : searchResults.length === 0 ? (
+          <div className='text-center text-white text-lg py-16'>
+            <EmptyContent
+              title='Data Not Found'
+              description='Try other keywords'
+              imageSrc='/images/not-found.svg'
+            />
+          </div>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
+          >
+            <SearchResultsGrid
+              title={`Search results for: ${query}`}
+              movies={searchResults}
+            />
+          </motion.div>
         )}
-      </section>
-    </Suspense>
+      </div>
+
+      {searchResults.length > 0 && (
+        <>
+          <Button
+            variant={'secondary'}
+            onClick={isAtBottom ? scrollToTop : scrollToBottom}
+            className={`fixed right-4 2xl:right-auto 2xl:left-1/2 2xl:translate-x-[calc(590px-100%)] p-3 text-white rounded-full shadow-lg !w-[44px] flex items-center justify-center z-50 transition-all duration-300 ${
+              isNearBottom ? 'bottom-24' : 'bottom-4'
+            }`}
+            aria-label={isAtBottom ? 'Scroll to top' : 'Scroll to bottom'}
+          >
+            {isAtBottom ? (
+              <ChevronLeftIcon className='rotate-90' />
+            ) : (
+              <ChevronLeftIcon className='rotate-270' />
+            )}
+          </Button>
+
+          <div ref={bottomRef} />
+        </>
+      )}
+    </section>
   );
 };
 
-export default SearchPage;
+// Wrapping SearchPage in Suspense for CSR functionality
+const SearchPageWithSuspense = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <SearchPage />
+  </Suspense>
+);
+
+export default SearchPageWithSuspense;
