@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, forwardRef, Ref } from 'react';
+import React, { useState, forwardRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { RoundedCloseIcon, SearchIcon } from '../ui/Icons';
 
@@ -9,23 +9,22 @@ type SearchProps = {
   className?: string;
   onSearch?: (value: string) => void;
   iconWidth?: string;
-  inputRef?: Ref<HTMLInputElement>;
 };
 
 const Search = forwardRef<HTMLInputElement, SearchProps>(
-  ({ size, onSearch, className = '', iconWidth = '24px', inputRef }, ref) => {
+  ({ size, onSearch, className = '', iconWidth = '24px' }, ref) => {
     const [query, setQuery] = useState('');
     const router = useRouter();
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = event.target.value;
       setQuery(value);
-      onSearch?.(value); // 👉 live search real-time
+      onSearch?.(value);
     };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (e.key === 'Enter') {
-        router.push(`/search?q=${encodeURIComponent(query)}`); // 👉 navigate ke halaman hasil penuh
+        router.push(`/search?q=${encodeURIComponent(query)}`);
       }
     };
 
@@ -64,7 +63,7 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
         />
 
         <input
-          ref={inputRef} // Menambahkan ref ke input
+          ref={ref} // ✅ Pakai ref dari forwardRef
           type='text'
           value={query}
           onChange={handleChange}

@@ -15,7 +15,6 @@ export const Header = () => {
     windowWidth: 0,
   });
 
-  const [query, setQuery] = useState('');
   const router = useRouter();
 
   // Menambahkan useRef untuk fokus ke input
@@ -63,7 +62,6 @@ export const Header = () => {
   const { showNav, isScrolled, isSearchActive } = state;
 
   const handleSearch = (value: string) => {
-    setQuery(value);
     router.push(`/search?q=${value}`);
   };
 
@@ -130,7 +128,7 @@ export const Header = () => {
               size='small'
               onSearch={handleSearch}
               className='!w-full'
-              inputRef={inputRef} // Menyambungkan ref ke input
+              ref={inputRef} // Menyambungkan ref ke input
             />
           </div>
         )}

@@ -135,9 +135,8 @@ export default function HomePage() {
     const getNew = async () => {
       setIsFetchingNewReleases(true);
       try {
-        const fetched: FormattedMovie[] = await fetchNewReleases(
-          newReleasesPage
-        );
+        const fetched: FormattedMovie[] = await fetchNewReleases();
+
         setNewReleases((prev) => {
           const all = [...prev, ...fetched];
           const unique = all.filter(
@@ -209,14 +208,19 @@ export default function HomePage() {
       </motion.div>
 
       {/* Tombol Scroll ke Bawah atau Kembali ke Atas */}
-      <Button variant={'secondary'}
+      <Button
+        variant={'secondary'}
         onClick={isAtBottom ? scrollToTop : scrollToBottom}
         className={`fixed right-4 2xl:right-auto 2xl:left-1/2 2xl:translate-x-[calc(590px-100%)] p-3 text-white rounded-full shadow-lg !w-[44px] flex items-center justify-center z-50 transition-all duration-300 ${
           isNearBottom ? 'bottom-24' : 'bottom-4'
         }`}
         aria-label={isAtBottom ? 'Scroll to top' : 'Scroll to bottom'}
       >
-        {isAtBottom ? (<ChevronLeftIcon className="rotate-90" />) : (<ChevronLeftIcon className="rotate-270" />)}
+        {isAtBottom ? (
+          <ChevronLeftIcon className='rotate-90' />
+        ) : (
+          <ChevronLeftIcon className='rotate-270' />
+        )}
       </Button>
 
       {/* Elemen Target Scroll */}

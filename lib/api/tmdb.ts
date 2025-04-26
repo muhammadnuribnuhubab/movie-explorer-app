@@ -1,4 +1,4 @@
-import { FormattedMovie, TMDBMovie } from '@/types/movie';
+import { FormattedMovie, TMDBNowPlayingResponse } from '@/types/movie';
 import axios from 'axios';
 
 const ACCESS_TOKEN = process.env.NEXT_PUBLIC_TMDB_ACCESS_TOKEN;
@@ -33,7 +33,7 @@ export const fetchNewReleases = async (): Promise<FormattedMovie[]> => {
 
   while (hasMoreData) {
     try {
-      const response = await axios.get<{ results: TMDBMovie[] }>(
+      const response = await axios.get<TMDBNowPlayingResponse>(
         `${BASE_URL}/movie/now_playing`,
         {
           headers: {
@@ -50,12 +50,13 @@ export const fetchNewReleases = async (): Promise<FormattedMovie[]> => {
         id: m.id.toString(),
         title: m.title,
         imageUrl: `https://image.tmdb.org/t/p/w500${m.poster_path}`,
-        rating: Number(m.vote_average).toFixed(2),
+        rating: Number(m.vote_average),
         description: m.overview,
       }));
 
       allMovies.push(...mappedMovies);
 
+      // Periksa apakah ada lebih banyak halaman
       hasMoreData = currentPage < response.data.total_pages;
       currentPage++;
     } catch (error) {
@@ -67,14 +68,12 @@ export const fetchNewReleases = async (): Promise<FormattedMovie[]> => {
   return allMovies;
 };
 
-
-
 // Fungsi untuk load lebih banyak film
 export const loadMoreNewReleases = async (
   currentPage: number,
   allMovies: FormattedMovie[]
 ) => {
-  const newMovies = await fetchNewReleases(currentPage);
+  const newMovies = await fetchNewReleases();
   return [...allMovies, ...newMovies]; // Gabungkan data lama dengan data baru
 };
 

@@ -22,7 +22,7 @@ const SearchPage = () => {
     if (trendingMovies.length === 0) {
       fetchTrending();
     }
-  }, []);
+  }, [fetchTrending, trendingMovies.length]);
 
   const [isAtBottom, setIsAtBottom] = useState(false); // Menambahkan state untuk deteksi scroll
 

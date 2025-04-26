@@ -22,8 +22,7 @@ export const NewRelease = ({
   onLoadMore,
   isLoading,
 }: NewReleasesProps) => {
-  const [visibleCount, setVisibleCount] = useState(8);
-  const [windowWidth, setWindowWidth] = useState<number>(0);
+  const [visibleCount, setVisibleCount] = useState(8); // Default 8 visible items
   const isAllVisible = visibleCount >= movies.length;
   const router = useRouter();
 
@@ -31,10 +30,10 @@ export const NewRelease = ({
 
   useEffect(() => {
     const handleResize = () => {
-      setWindowWidth(window.innerWidth);
+      // Logic to handle resize could go here (optional)
     };
 
-    handleResize(); // set initial width
+    handleResize(); // Set initial width
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -45,18 +44,18 @@ export const NewRelease = ({
       initialized.current = true;
 
       const savedCount = sessionStorage.getItem('visibleNewRelease');
-      const defaultCount = window.innerWidth >= 768 ? 15 : 8;
+      const defaultCount = window.innerWidth >= 768 ? 15 : 8; // Larger default for larger screens
 
       setVisibleCount(savedCount ? Number(savedCount) : defaultCount);
     }
   }, []);
 
   const handleLoadMore = () => {
-    const increment = window.innerWidth >= 768 ? 60 : 30;
+    const increment = window.innerWidth >= 768 ? 60 : 30; // More items on larger screens
     const newCount = visibleCount + increment;
     setVisibleCount(newCount);
-    sessionStorage.setItem('visibleNewRelease', String(newCount));
-    onLoadMore();
+    sessionStorage.setItem('visibleNewRelease', String(newCount)); // Save to sessionStorage
+    onLoadMore(); // Trigger onLoadMore callback
   };
 
   return (
