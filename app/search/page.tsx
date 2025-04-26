@@ -23,9 +23,12 @@ const SearchPage = () => {
 
   const rawQuery = useSearchParams().get('q');
 
+  // Set query when search params change
   useEffect(() => {
     if (rawQuery) {
       setQuery(rawQuery.trim().toLowerCase());
+    } else {
+      setQuery('');
     }
   }, [rawQuery]);
 
@@ -85,7 +88,7 @@ const SearchPage = () => {
 
   useEffect(() => {
     if (!query) {
-      router.push('/search');
+      router.push('/search'); // Reset to the search page without query
     }
   }, [query, router]);
 
@@ -149,7 +152,6 @@ const SearchPage = () => {
   );
 };
 
-// Wrapping SearchPage in Suspense for CSR functionality
 const SearchPageWithSuspense = () => (
   <Suspense fallback={<div>Loading...</div>}>
     <SearchPage />
