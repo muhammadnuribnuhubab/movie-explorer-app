@@ -3,8 +3,9 @@
 import { useRouter } from 'next/navigation';
 
 import type { FormattedMovie } from '@/types/movie';
-import { SectionTitle } from '@/components/section';
-import { MovieCard } from '@/components/card';
+import { motion } from 'framer-motion';
+import { MovieCard } from '@/components/card/MovieCard';
+import { SectionTitle } from '@/components/section/SectionTitle';
 
 type SearchResultsGridProps = {
   title: string;
@@ -21,9 +22,7 @@ export const SearchResultsGrid = ({
 
   if (movies.length === 0) {
     return (
-      <section
-        className={`max-w-[1180px] ${className}`}
-      >
+      <section className={`max-w-[1180px] ${className}`}>
         <SectionTitle title={title} />
         <div className='text-center text-white'>
           <p>No movies found. Try using different keywords.</p>
@@ -36,12 +35,22 @@ export const SearchResultsGrid = ({
     <section className={`${className}`}>
       <SectionTitle title={title} />
 
-      <div className='mt-6 md:mt-8 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'>
+      <motion.div
+        className='mt-6 md:mt-8 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
+        viewport={{ once: true }}
+      >
         {movies.map((movie) => (
-          <div
+          <motion.div
             key={movie.id}
             className='cursor-pointer'
             onClick={() => router.push(`/detail/${movie.id}`)}
+            initial={{ opacity: 0, scale: 0.8 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            viewport={{ once: false }}
           >
             <MovieCard
               imageUrl={movie.imageUrl}
@@ -49,9 +58,9 @@ export const SearchResultsGrid = ({
               rating={movie.rating}
               trendingIndex={movie.trendingIndex}
             />
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </section>
   );
 };

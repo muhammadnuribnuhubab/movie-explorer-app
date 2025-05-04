@@ -1,13 +1,13 @@
 'use client';
 
 import Image from 'next/image';
-import { Rating } from '../ui';
 import { motion } from 'framer-motion';
+import { Rating } from '../ui/Rating';
 
 type MovieCardProps = {
   imageUrl: string;
   title: string;
-  rating: number;
+  rating: number | string;
   trendingIndex?: number;
 };
 

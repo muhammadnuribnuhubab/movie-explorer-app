@@ -1,5 +1,5 @@
-import { CalendarIcon } from '../ui';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { CalendarIcon } from '../ui/Icons';
 
 type ReleaseDateProps = {
   date: string; // menerima tanggal dalam format string

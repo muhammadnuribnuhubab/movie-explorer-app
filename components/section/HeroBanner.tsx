@@ -1,10 +1,11 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Button, PlayIcon } from '../ui';
 import { MovieBackground } from './MovieBackground';
 import Link from 'next/link';
 import type { Movie } from '@/types/movie';
+import { Button } from '../ui/Button';
+import { PlayIcon } from '../ui/Icons';
 
 type HeroBannerProps = {
   movie: Movie;

@@ -11,8 +11,8 @@ export const CardCast = ({ name, role, imageUrl }: CardCastProps) => {
 
   return (
     <div className='flex items-center gap-4 md:gap-6'>
-      <div className='w-[55px] md:w-[69px] h-[84px] md:h-[104px] rounded-lg overflow-hidden bg-amber-600'>
-        <div className='relative w-[55px] md:w-[69px] h-[84px] md:h-[104px] rounded-lg overflow-hidden bg-amber-600'>
+      <div className='w-[55px] md:w-[69px] h-[84px] md:h-[104px] rounded-lg overflow-hidden bg-primary-300'>
+        <div className='relative w-[55px] md:w-[69px] h-[84px] md:h-[104px] rounded-lg overflow-hidden bg-primary-300'>
           <Image
             src={imageUrl ?? placeholder}
             alt={name}

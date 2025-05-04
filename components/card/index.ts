@@ -1,2 +1,2 @@
-export * from './CastCard';
-export * from './MovieCard';
+// export * from './CastCard';
+// export * from './MovieCard';

@@ -37,7 +37,7 @@ export const FavoriteItem = ({
         <div className='flex justify-between items-center md:items-start gap-3xl'>
           {/* Kolom 1: Poster */}
           <Link href={`/detail/${id}`}>
-            <div className='w-[104px] h-[156px] md:w-[182px] md:h-[270px] rounded-md md:rounded-xl overflow-hidden bg-amber-600 flex-shrink-0'>
+            <div className='w-[104px] h-[156px] md:w-[182px] md:h-[270px] rounded-md md:rounded-xl overflow-hidden bg-primary-300 flex-shrink-0'>
               <Image
                 src={posterUrl || '/images/placeholder.png'}
                 alt={title}

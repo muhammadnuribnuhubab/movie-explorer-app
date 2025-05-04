@@ -2,9 +2,10 @@
 
 import { useState } from 'react';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import { Button, HeartInlineIcon, HeartOutlineIcon, PlayIcon } from '../ui';
 import { Toast } from '../ui/Toast';
 import { useFavorites } from '@/contexts/FavoriteContext';
+import { Button } from '../ui/Button';
+import { PlayIcon, HeartInlineIcon, HeartOutlineIcon } from '../ui/Icons';
 
 interface MovieActionsProps {
   trailerUrl?: string;

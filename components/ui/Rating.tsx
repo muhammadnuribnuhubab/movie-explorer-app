@@ -1,7 +1,7 @@
 import { StarInlineIcon } from './Icons'; // Pastikan import ini sesuai dengan lokasi Icon kamu
 
 interface RatingProps {
-  rating: number;
+  rating: number | string;
   className?: string;
 }
 

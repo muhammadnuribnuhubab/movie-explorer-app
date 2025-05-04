@@ -44,8 +44,8 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
       'pl-5xl pr-5xl',
       'border border-neutral-800',
       'font-normal',
-      query ? 'text-neutral-25' : 'text-neutral-700',
-      'placeholder:text-neutral-700',
+      'text-neutral-25',
+      'placeholder:text-neutral-25',
       'focus:outline-none',
       'transition-colors duration-150',
       'bg-[#0A0D1299]',
@@ -58,7 +58,7 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
     return (
       <div className={`relative flex items-center ${className}`}>
         <SearchIcon
-          className={`left-lg ${iconPositionClass} ${iconSizeClass} text-neutral-700 pointer-events-none z-20`}
+          className={`left-lg ${iconPositionClass} ${iconSizeClass} text-neutral-25 pointer-events-none z-20`}
           style={{ width: iconWidth, height: iconWidth }}
         />
 
@@ -78,7 +78,7 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
             onClick={clearSearch}
             className={`right-lg ${iconPositionClass}`}
           >
-            <RoundedCloseIcon className={`${iconSizeClass} text-neutral-700`} />
+            <RoundedCloseIcon className={`${iconSizeClass} text-neutral-25`} />
           </button>
         )}
       </div>
