@@ -19,6 +19,7 @@ export const CardCast = ({ name, role, imageUrl }: CardCastProps) => {
             fill
             sizes='(min-width: 768px) 69px, 55px'
             className='object-cover'
+            unoptimized
           />
         </div>
       </div>

@@ -45,6 +45,7 @@ export const MovieBackground = ({
           className={`object-cover object-top transition-opacity duration-500 ${
             isLoaded ? 'opacity-100' : 'opacity-0'
           }`}
+          unoptimized
         />
 
         {/* Overlay Gradient */}

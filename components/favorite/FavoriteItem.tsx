@@ -44,6 +44,7 @@ export const FavoriteItem = ({
                 width={182}
                 height={270}
                 className='w-full h-full object-cover'
+                unoptimized
               />
             </div>
           </Link>

@@ -83,6 +83,7 @@ export const MovieDetail = ({
                 height={384}
                 className='rounded-md'
                 style={{ height: 'auto', width: 'auto' }}
+                unoptimized
               />
             )}
             <div className='mt-3 md:hidden'>

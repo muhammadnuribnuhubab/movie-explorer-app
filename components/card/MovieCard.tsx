@@ -45,6 +45,7 @@ export const MovieCard = ({
           fill
           className='object-cover bg-gray-500'
           sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          unoptimized
         />
       </div>
       <div className='mt-2 text-left'>
