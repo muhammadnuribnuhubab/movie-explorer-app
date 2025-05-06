@@ -24,7 +24,7 @@ export const Footer = () => {
             <GitHubIcon className='size-5 text-neutral-700' />
           </Link>
           <Link
-            href='https://www.linkedin.com/in/nuribnuu/'
+            href='https://www.linkedin.com/in/muhammadnuribnuhubab/'
             target='_blank'
             rel='noopener noreferrer'
             className='p-2 bg-neutral-25 rounded-md hover:bg-neutral-300 transition'

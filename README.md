@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎬 Movie Explorer App
 
-## Getting Started
+Explore, discover, and save your favorite movies with **Movie Explorer**, a sleek web app built using **Next.js**, **TypeScript**, and powered by the [TMDb API](https://developer.themoviedb.org/). Live demo: [findcinema.vercel.app](https://findcinema.vercel.app)
 
-First, run the development server:
+[![Vercel Deployment](https://img.shields.io/badge/Deployed%20on-Vercel-000?logo=vercel&logoColor=white)](https://vercel.com)
+[![Next.js](https://img.shields.io/badge/built%20with-Next.js-000?logo=next.js)](https://nextjs.org)
+[![Tailwind CSS](https://img.shields.io/badge/styled%20with-Tailwind%20CSS-38bdf8?logo=tailwindcss&logoColor=white)](https://tailwindcss.com)
+
+---
+
+## 🚀 Features
+
+### 🏠 Home Page
+
+- Browse trending movies with posters, titles, and ratings
+- Infinite scroll or pagination
+- **Live search** functionality to search movies in real-time
+- **Scroll navigation buttons** to jump to top or bottom easily
+
+### 📄 Movie Detail Page
+
+- Full movie information (poster, rating, release date, overview)
+- Cast & Crew listings
+- Trailers (if available)
+- **Protected routing** to prevent direct access via URL without navigation flow
+
+### ❤️ Favorites System
+
+- Save and remove favorites using `localStorage`
+- Separate favorites page to view saved movies
+
+### 🔍 Explore More Page
+
+- "Load More" button to fetch additional movies
+- Integrated filters and sorting options (in development)
+
+### 🖼️ Media & Visuals
+
+- Integrated **SwiperJS** for carousel sliders (e.g., featured movies)
+- Smooth animations with **Framer Motion**
+
+### 💡 Responsive UI
+
+- Fully mobile-friendly design
+- Consistent and clean layout with **Tailwind CSS**
+
+---
+
+## 🛠️ Tech Stack
+
+- **Next.js (App Router)**
+- **TypeScript**
+- **Tailwind CSS**
+- **Framer Motion**
+- **Axios**
+- **SwiperJS**
+- **TMDb API**
+
+---
+
+## 📦 Getting Started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/muhammadibnu05/movie-explorer-app.git
+cd movie-explorer-app
+
+npm install # or bun/yarn/pnpm
+npm run dev # or bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🔐 Environment Variables
 
-## Learn More
+Create a `.env.local` file and add:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+NEXT_PUBLIC_TMDB_API_KEY=your_tmdb_api_key
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧠 Learn More
 
-## Deploy on Vercel
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Framer Motion](https://www.framer.com/motion/)
+- [SwiperJS](https://swiperjs.com/react)
+- [TMDb API Documentation](https://developer.themoviedb.org/)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🚀 Deployment
+
+Deploy on Vercel:
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new)

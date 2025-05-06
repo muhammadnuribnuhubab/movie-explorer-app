@@ -24,8 +24,8 @@ export default function SearchPageGuard({ children }: ClientGuardProps) {
   useEffect(() => {
     if (checked && !allowed) {
       const timeout = setTimeout(() => {
-        router.replace('/'); // Redirect ke homepage jika tidak ada akses yang sah
-      }, 3000); // Redirect setelah 3 detik
+        router.replace('/');
+      }, 3000);
       return () => clearTimeout(timeout);
     }
   }, [checked, allowed, router]);
