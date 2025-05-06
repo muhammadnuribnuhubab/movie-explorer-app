@@ -9,14 +9,15 @@ import { Toast } from '../ui/Toast';
 import { useFavorites } from '@/contexts/FavoriteContext';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation'; // ← pakai useRouter dari app router
 
 export const FavoriteList = () => {
   const { favoriteMovies, removeFavorite } = useFavorites();
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const router = useRouter(); // ← init router
 
-  const isFavorite = (id: string) => {
-    return favoriteMovies.some((fav) => fav.id === id);
-  };
+  const isFavorite = (id: string) =>
+    favoriteMovies.some((fav) => fav.id === id);
 
   const handleRemove = (id: string) => {
     removeFavorite(id);
@@ -26,6 +27,12 @@ export const FavoriteList = () => {
 
   const handleWatch = (url?: string) => {
     if (url) window.open(url, '_blank', 'noopener');
+  };
+
+  // ← navigasi ke detail dengan flag internal
+  const handleClick = (id: string) => {
+    sessionStorage.setItem('fromInternalNavigation', 'true');
+    router.push(`/detail/${id}`);
   };
 
   return (
@@ -70,6 +77,7 @@ export const FavoriteList = () => {
                 onRemove={() => handleRemove(movie.id)}
                 isFavorite={isFavorite(movie.id)}
                 onToggleFavorite={() => {}}
+                onClick={() => handleClick(movie.id)} // ← tambahkan prop onClick
               />
             </motion.div>
           ))}

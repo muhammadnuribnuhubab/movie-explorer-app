@@ -1,12 +1,12 @@
 // components/favorite/FavoriteItem.tsx
 
-import Link from 'next/link';
 import { Button } from '../ui/Button';
 import { PlayIcon, HeartInlineIcon, HeartOutlineIcon } from '../ui/Icons';
 import { Rating } from '../ui/Rating';
 import Image from 'next/image';
 
-type FavoriteItemProps = {
+// Tambahkan onClick ke interface props
+export type FavoriteItemProps = {
   id: string;
   posterUrl: string;
   title: string;
@@ -15,12 +15,12 @@ type FavoriteItemProps = {
   trailerUrl?: string;
   onRemove?: () => void;
   onWatch?: () => void;
+  onClick?: () => void; // ← Ditambahkan optional onClick
   isFavorite: boolean;
   onToggleFavorite: () => void;
 };
 
 export const FavoriteItem = ({
-  id,
   title,
   rating,
   description,
@@ -30,61 +30,78 @@ export const FavoriteItem = ({
   onWatch,
   isFavorite,
   onToggleFavorite,
+  onClick, // ← Terima prop onClick
 }: FavoriteItemProps) => {
   return (
-    <div className='md:max-w-[1160px] '>
+    <div onClick={onClick} className='cursor-pointer md:max-w-[1160px]'>
       <div className='flex justify-between gap-[126px] items-center md:items-start'>
         <div className='flex justify-between items-center md:items-start gap-3xl'>
-          {/* Kolom 1: Poster */}
-          <Link href={`/detail/${id}`}>
-            <div className='w-[104px] h-[156px] md:w-[182px] md:h-[270px] rounded-md md:rounded-xl overflow-hidden bg-primary-300 flex-shrink-0'>
-              <Image
-                src={posterUrl || '/images/placeholder.png'}
-                alt={title}
-                width={182}
-                height={270}
-                className='w-full h-full object-cover'
-                unoptimized
-              />
-            </div>
-          </Link>
+          <div className='w-[104px] h-[156px] md:w-[182px] md:h-[270px] rounded-md md:rounded-xl overflow-hidden bg-primary-300 flex-shrink-0'>
+            <Image
+              src={posterUrl || '/images/placeholder.png'}
+              alt={title}
+              width={182}
+              height={270}
+              className='w-full h-full object-cover'
+              unoptimized
+            />
+          </div>
 
-          <Link href={`/detail/${id}`}>
-            <div className='flex flex-col justify-start text-left w-full md:max-w-[1772px]'>
-              <div className='flex flex-col gap-xs md:gap-lg'>
-                <h2 className='font-bold text-[16px] md:text-[24px] text-neutral-25'>
-                  {title}
-                </h2>
-                <Rating
-                  rating={rating}
-                  className='font-medium !md:text-[16px] !text-neutral-25'
-                />
-                <p className='font-normal text-[14px] md:text-[16px] text-neutral-400 line-clamp-2'>
-                  {description}
-                </p>
-              </div>
+          <div className='flex flex-col justify-start text-left w-full md:max-w-[1772px]'>
+            <h2 className='font-bold text-[16px] md:text-[24px] text-neutral-25'>
+              {title}
+            </h2>
+            <Rating
+              rating={rating}
+              className='font-medium !md:text-[16px] !text-neutral-25'
+            />
+            <p className='font-normal text-[14px] md:text-[16px] text-neutral-400 line-clamp-2'>
+              {description}
+            </p>
 
-              <div className='hidden md:flex justify-between items-center gap-xl mt-3xl'>
-                {trailerUrl && (
-                  <Button onClick={onWatch} className='w-auto px-[29px]'>
-                    Watch Trailer <PlayIcon size={24} />
-                  </Button>
-                )}
-              </div>
+            <div className='hidden md:flex justify-between items-center gap-xl mt-3xl'>
+              {trailerUrl && (
+                <Button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onWatch?.();
+                  }}
+                  className='w-auto px-[29px]'
+                >
+                  Watch Trailer <PlayIcon size={24} />
+                </Button>
+              )}
             </div>
-          </Link>
+          </div>
         </div>
 
-        <div className='hidden md:flex justify-center items-start w-[44px] h-[44px] text-right'>
+        <div className='hidden md:flex items-start'>
           <Button
             variant='secondary'
             className='!w-[44px] !h-[44px]'
-            onClick={onRemove}
+            onClick={(e) => {
+              e.stopPropagation();
+              onRemove?.();
+            }}
           >
             {isFavorite ? (
-              <HeartInlineIcon onClick={onToggleFavorite} size={16} className='text-[#E41D02]' />
+              <HeartInlineIcon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite();
+                }}
+                size={16}
+                className='text-[#E41D02]'
+              />
             ) : (
-              <HeartOutlineIcon onClick={onToggleFavorite} size={16} className='text-neutral-400' />
+              <HeartOutlineIcon
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onToggleFavorite();
+                }}
+                size={16}
+                className='text-neutral-400'
+              />
             )}
           </Button>
         </div>
@@ -92,19 +109,42 @@ export const FavoriteItem = ({
 
       <div className='flex justify-between items-center gap-xl md:hidden mt-8'>
         {trailerUrl && (
-          <Button onClick={onWatch} className='w-full'>
+          <Button
+            onClick={(e) => {
+              e.stopPropagation();
+              onWatch?.();
+            }}
+            className='w-full'
+          >
             Watch Trailer <PlayIcon size={24} />
           </Button>
         )}
         <Button
           variant='secondary'
           className='!w-[44px] !h-[44px]'
-          onClick={onRemove}
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove?.();
+          }}
         >
           {isFavorite ? (
-            <HeartInlineIcon onClick={onToggleFavorite} size={16} className='text-[#E41D02]' />
+            <HeartInlineIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite();
+              }}
+              size={16}
+              className='text-[#E41D02]'
+            />
           ) : (
-            <HeartOutlineIcon onClick={onToggleFavorite} size={16} className='text-neutral-400' />
+            <HeartOutlineIcon
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleFavorite();
+              }}
+              size={16}
+              className='text-neutral-400'
+            />
           )}
         </Button>
       </div>

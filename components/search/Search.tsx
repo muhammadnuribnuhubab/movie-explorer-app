@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, forwardRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { RoundedCloseIcon, SearchIcon } from '../ui/Icons';
 
@@ -15,24 +15,61 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
   ({ size, onSearch, className = '', iconWidth = '24px' }, ref) => {
     const [query, setQuery] = useState('');
     const router = useRouter();
+    const lastQuery = useRef('');
+    const debounceTimer = useRef<NodeJS.Timeout | null>(null);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = event.target.value;
-      setQuery(value);
-      onSearch?.(value);
+      setQuery(event.target.value);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === 'Enter') {
-        router.push(`/search?q=${encodeURIComponent(query)}`);
+    const handleSearch = () => {
+      const trimmedQuery = query.trim();
+      if (trimmedQuery) {
+        sessionStorage.setItem('searchQuery', trimmedQuery);
+        sessionStorage.setItem('allowSearchAccess', 'true');
+        sessionStorage.setItem('fromInternalNavigation', 'true');
+        onSearch?.(trimmedQuery);
+        router.push(`/search?q=${encodeURIComponent(trimmedQuery)}`);
+        lastQuery.current = trimmedQuery;
       }
     };
 
     const clearSearch = () => {
       setQuery('');
+      lastQuery.current = '';
       onSearch?.('');
+      sessionStorage.setItem('searchQuery', '');
+      sessionStorage.setItem('allowSearchAccess', 'true');
+      sessionStorage.setItem('fromInternalNavigation', 'true');
       router.push('/search');
     };
+
+    useEffect(() => {
+      if (debounceTimer.current) {
+        clearTimeout(debounceTimer.current);
+      }
+
+      debounceTimer.current = setTimeout(() => {
+        const trimmed = query.trim();
+        if (trimmed && trimmed !== lastQuery.current) {
+          sessionStorage.setItem('allowSearchAccess', 'true');
+          sessionStorage.setItem('fromInternalNavigation', 'true');
+          router.push(`/search?q=${encodeURIComponent(trimmed)}`);
+          lastQuery.current = trimmed;
+        }
+
+        if (!trimmed && lastQuery.current) {
+          router.push('/search');
+          lastQuery.current = '';
+        }
+      }, 500); // delay 500ms
+
+      return () => {
+        if (debounceTimer.current) {
+          clearTimeout(debounceTimer.current);
+        }
+      };
+    }, [query, router]);
 
     const isLarge = size === 'large';
 
@@ -57,21 +94,24 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
 
     return (
       <div className={`relative flex items-center ${className}`}>
-        <SearchIcon
-          className={`left-lg ${iconPositionClass} ${iconSizeClass} text-neutral-25 pointer-events-none z-20`}
-          style={{ width: iconWidth, height: iconWidth }}
-        />
-
+        <button
+          type='button'
+          onClick={handleSearch}
+          className={`left-lg ${iconPositionClass} z-20`}
+        >
+          <SearchIcon
+            className={`${iconSizeClass} text-neutral-25`}
+            style={{ width: iconWidth, height: iconWidth }}
+          />
+        </button>
         <input
-          ref={ref} // ✅ Pakai ref dari forwardRef
+          ref={ref}
           type='text'
           value={query}
           onChange={handleChange}
-          onKeyDown={handleKeyDown}
           placeholder='Search Movie'
           className={inputClass}
         />
-
         {query && (
           <button
             type='button'

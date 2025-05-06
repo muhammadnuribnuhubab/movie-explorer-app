@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useEffect, useState, Suspense } from 'react';
+import { useEffect, useState, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { EmptyContent } from '@/components/section/EmptyContent';
 import type { FormattedMovie } from '@/types/movie';
@@ -10,6 +10,7 @@ import { ScrollButton } from '@/components/ui/ScrollButton';
 import { SectionTitle } from '@/components/section/SectionTitle';
 import { fetchExploreMore } from '@/lib/api/exploreMore';
 import { fetchTrendingMovies } from '@/lib/api/trending';
+import ClientGuard from '@/components/ClientGuard';
 
 const MAX_BATCH_PAGES = 5;
 
@@ -27,7 +28,6 @@ const SearchPage = () => {
     setQuery(rawQuery.trim().toLowerCase());
   }, [rawQuery]);
 
-  // fetch trending
   useEffect(() => {
     fetchTrendingMovies()
       .then((raw: unknown[]) => {
@@ -43,7 +43,7 @@ const SearchPage = () => {
             id: movie.id.toString(),
             title: movie.title,
             imageUrl: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
-            rating: movie.vote_average.toFixed(1), // <-- convert to string
+            rating: movie.vote_average.toFixed(1),
             description: movie.overview,
             trendingIndex: i + 1,
           };
@@ -53,7 +53,6 @@ const SearchPage = () => {
       .catch(console.error);
   }, []);
 
-  // initial fetch new releases
   useEffect(() => {
     setLoadingReleases(true);
     fetchExploreMore(1, MAX_BATCH_PAGES)
@@ -62,7 +61,6 @@ const SearchPage = () => {
       .finally(() => setLoadingReleases(false));
   }, []);
 
-  // combine movies
   const allMovies = useMemo<FormattedMovie[]>(() => {
     const map = new Map<string, FormattedMovie>();
     trendingMovies.forEach((m) => map.set(m.id, m));
@@ -76,14 +74,12 @@ const SearchPage = () => {
     });
   }, [trendingMovies, newReleases]);
 
-  // filter search results
   const searchResults = useMemo(() => {
     return query
       ? allMovies.filter((m) => m.title.toLowerCase().includes(query))
       : [];
   }, [query, allMovies]);
 
-  // auto-load more on search if no results yet
   useEffect(() => {
     if (!query) return;
     if (searchResults.length === 0 && !loadingReleases) {
@@ -103,7 +99,6 @@ const SearchPage = () => {
     }
   }, [query, searchResults.length, loadingReleases, searchPage]);
 
-  // infinite scroll new releases (no loading UI)
   useEffect(() => {
     if (!query && !newReleases.length) return;
     if (isNearBottom && !loadingReleases) {
@@ -123,7 +118,6 @@ const SearchPage = () => {
     }
   }, [isNearBottom, loadingReleases, query, newReleases.length, searchPage]);
 
-  // scroll detection
   useEffect(() => {
     const onScroll = () => {
       const y = window.scrollY,
@@ -170,21 +164,35 @@ const SearchPage = () => {
         </motion.div>
       )}
 
-      {searchResults.length > 0 && (
-        <>
-          <ScrollButton />
-        </>
-      )}
+      {searchResults.length > 0 && <ScrollButton />}
     </section>
   );
 };
 
-const SearchPageWithSuspense = () => (
-  <Suspense
-    fallback={<div className='text-center py-16 text-white'>Loading...</div>}
-  >
-    <SearchPage />
-  </Suspense>
-);
+const SearchPageWithSuspense = () => {
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const isInternal = sessionStorage.getItem('fromInternalNavigation') === 'true';
+      const rawQuery = new URLSearchParams(window.location.search).get('q') ?? '';
+      const isQueryFromUrl = rawQuery.trim() !== '';
+
+      if (isQueryFromUrl && !isInternal) {
+        sessionStorage.setItem('fromInternalNavigation', 'false');
+      }
+    }
+  }, []);
+
+  return (
+    <Suspense
+      fallback={<div className='text-center py-16 text-white'>Loading...</div>}
+    >
+      <ClientGuard>
+        <SearchPage />
+      </ClientGuard>
+    </Suspense>
+  );
+};
+
+
 
 export default SearchPageWithSuspense;

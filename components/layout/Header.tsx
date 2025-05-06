@@ -48,8 +48,12 @@ export const Header = () => {
     const handleResize = () => {
       const newWindowWidth = window.innerWidth;
       setState((prevState) => {
-        if (newWindowWidth >= 578 && prevState.isSearchActive) {
-          return { ...prevState, isSearchActive: false };
+        if (newWindowWidth >= 768 && prevState.isSearchActive) {
+          return {
+            ...prevState,
+            isSearchActive: false,
+            windowWidth: newWindowWidth,
+          };
         }
         return { ...prevState, windowWidth: newWindowWidth };
       });
@@ -59,21 +63,23 @@ export const Header = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, [state.isSearchActive]);
 
-  const { showNav, isScrolled, isSearchActive } = state;
+  const { showNav, isScrolled, isSearchActive, windowWidth } = state;
 
   const handleSearch = (value: string) => {
     router.push(`/search?q=${value}`);
   };
 
   const handleSearchIconClick = () => {
-    setState((prevState) => ({ ...prevState, isSearchActive: true }));
+    if (windowWidth < 768) {
+      setState((prevState) => ({ ...prevState, isSearchActive: true }));
+    }
   };
 
   useEffect(() => {
-    if (state.isSearchActive && inputRef.current) {
+    if (isSearchActive && inputRef.current) {
       inputRef.current.focus();
     }
-  }, [state.isSearchActive]);
+  }, [isSearchActive]);
 
   const getNavLinkClass = (path: string) =>
     pathname === path ? 'text-red-500' : 'text-white';
@@ -96,7 +102,7 @@ export const Header = () => {
           <div className='flex justify-between items-center w-full md:w-auto'>
             <div className='flex items-center 3xl md:gap-5xl lg:gap-8xl'>
               <Logo />
-              <nav className='hidden md:flex justify-between items-center gap-3xl lg:gap-7xl font-semibold'>
+              <nav className='hidden md:flex justify-between items-center gap-3xl lg:gap-7xl font-semibold text-xl'>
                 <Link
                   href='/'
                   className={`${getNavLinkClass(
@@ -107,6 +113,9 @@ export const Header = () => {
                 </Link>
                 <Link
                   href='/favorites'
+                  onClick={() =>
+                    sessionStorage.setItem('fromInternalNavigation', 'true')
+                  }
                   className={`${getNavLinkClass(
                     '/favorites'
                   )} hover:text-red-500 transition-colors duration-200 ease-in-out`}
@@ -131,12 +140,12 @@ export const Header = () => {
         )}
 
         <AnimatePresence>
-          {isSearchActive && (
+          {isSearchActive && windowWidth < 768 && (
             <motion.div
               key='search-bar'
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              exit={{ opacity: 0, y: -100 }}
               transition={{ duration: 0.3 }}
               className='flex items-center w-full gap-4 z-30 relative md:hidden pt-0'
             >
@@ -194,10 +203,13 @@ export const Header = () => {
               </Link>
               <Link
                 href='/favorites'
+                onClick={() => {
+                  sessionStorage.setItem('fromInternalNavigation', 'true');
+                  setState((prev) => ({ ...prev, showNav: false }));
+                }}
                 className={`${getNavLinkClass(
                   '/favorites'
-                )} hover:text-red-500 transition-colors duration-200 ease-in-out`}
-                onClick={() => setState({ ...state, showNav: false })}
+                )} hover:text-red-500`}
               >
                 Favorites
               </Link>

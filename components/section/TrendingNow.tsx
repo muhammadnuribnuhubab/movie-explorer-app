@@ -61,6 +61,11 @@ export const TrendingNow = ({ title, className = '' }: TrendingNowProps) => {
     }
   }, [movies]);
 
+  const handleClick = (id: string) => {
+    sessionStorage.setItem('fromInternalNavigation', 'true');
+    router.push(`/detail/${id}`);
+  };
+
   return (
     <section
       className={`relative max-w-[1180px] mx-auto px-[18px] ${className}`}
@@ -94,10 +99,11 @@ export const TrendingNow = ({ title, className = '' }: TrendingNowProps) => {
         slidesPerView={2}
         navigation={{ prevEl: '#swiper-prev', nextEl: '#swiper-next' }}
         breakpoints={{
-          480: { slidesPerView: 2.2 },
-          640: { slidesPerView: 2.5 },
-          768: { slidesPerView: 3 },
-          1024: { slidesPerView: 4 },
+          300: { slidesPerView: 3 },
+          480: { slidesPerView: 3 },
+          640: { slidesPerView: 4 },
+          768: { slidesPerView: 4 },
+          1024: { slidesPerView: 5 },
           1280: { slidesPerView: 5 },
         }}
         onSwiper={(swiper) => {
@@ -116,7 +122,7 @@ export const TrendingNow = ({ title, className = '' }: TrendingNowProps) => {
           <SwiperSlide key={`${movie.id}-${movie.trendingIndex ?? index}`}>
             <div
               className='cursor-pointer'
-              onClick={() => router.push(`/detail/${movie.id}`)}
+              onClick={() => handleClick(movie.id)}
             >
               <MovieCard
                 imageUrl={movie.imageUrl}

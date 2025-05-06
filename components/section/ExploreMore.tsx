@@ -105,11 +105,16 @@ export const ExploreMore = ({
     }
   }, [movies]);
 
+  const handleClick = (id: string) => {
+    sessionStorage.setItem('fromInternalNavigation', 'true');
+    router.push(`/detail/${id}`);
+  };
+
   return (
     <section className={`mx-auto mt-12 max-w-[1180px] px-[18px] ${className}`}>
       <SectionTitle title={title} />
       <motion.div
-        className='relative mt-6 grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5'
+        className='relative mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4'
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
@@ -119,7 +124,7 @@ export const ExploreMore = ({
           <motion.div
             key={movie.id}
             className='cursor-pointer'
-            onClick={() => router.push(`/detail/${movie.id}`)}
+            onClick={() => handleClick(movie.id)}
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}

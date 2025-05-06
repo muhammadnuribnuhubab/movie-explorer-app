@@ -42,9 +42,10 @@ export const MovieCard = ({
         <Image
           src={imageUrl}
           alt={title}
-          fill
-          className='object-cover bg-gray-500'
-          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          width={300}
+          height={450}
+          className='object-cover rounded-lg w-full h-auto'
+          sizes='(max-width: 1024px) 100vw, 1024px'
           unoptimized
         />
       </div>

@@ -1,6 +1,8 @@
+import { notFound } from 'next/navigation';
 import { MovieDetail } from '@/components/section/MovieDetail';
 import { fetchMovieDetail } from '@/lib/api/movieDetail';
 import type { MovieDetailProps, MovieApiResponse } from '@/types/movie';
+import ClientGuard from '@/components/ClientGuard';
 
 export default async function DetailPage({
   params,
@@ -9,12 +11,22 @@ export default async function DetailPage({
 }) {
   const { id } = await params;
 
+  // Validasi ID: hanya angka dan panjang maksimal (opsional)
+  if (!/^\d+$/.test(id)) {
+    return notFound();
+  }
+
   let data: MovieApiResponse;
   try {
     data = await fetchMovieDetail(id);
+
+    // Jika response tidak mengandung judul (artinya data tidak valid)
+    if (!data?.title) {
+      return notFound();
+    }
   } catch (err) {
     console.error(`Failed to fetch movie detail for id ${id}:`, err);
-    throw new Error('Failed to load movie detail');
+    return notFound();
   }
 
   const trailerItem =
@@ -50,5 +62,9 @@ export default async function DetailPage({
       })),
   };
 
-  return <MovieDetail {...movieDetailProps} />;
+  return (
+    <ClientGuard>
+      <MovieDetail {...movieDetailProps} />
+    </ClientGuard>
+  );
 }

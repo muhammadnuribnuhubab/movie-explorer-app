@@ -20,6 +20,11 @@ export const SearchResultsGrid = ({
 }: SearchResultsGridProps) => {
   const router = useRouter();
 
+  const handleClick = (id: string) => {
+    sessionStorage.setItem('fromInternalNavigation', 'true');
+    router.push(`/detail/${id}`);
+  };
+
   if (movies.length === 0) {
     return (
       <section className={`max-w-[1180px] ${className}`}>
@@ -46,7 +51,7 @@ export const SearchResultsGrid = ({
           <motion.div
             key={movie.id}
             className='cursor-pointer'
-            onClick={() => router.push(`/detail/${movie.id}`)}
+            onClick={() => handleClick(movie.id)}
             initial={{ opacity: 0, scale: 0.8 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
