@@ -100,7 +100,7 @@ export const Header = () => {
       <div className='flex flex-col md:flex-row justify-between items-center gap-2xl px-xl max-w-[1160px] md:mx-auto py-[18px] md:py-[22px]'>
         {!isSearchActive && (
           <div className='flex justify-between items-center w-full md:w-auto'>
-            <div className='flex items-center 3xl md:gap-5xl lg:gap-8xl'>
+            <div className='flex items-baseline 3xl md:gap-5xl lg:gap-8xl'>
               <Logo />
               <nav className='hidden md:flex justify-between items-center gap-3xl lg:gap-7xl font-semibold text-xl'>
                 <Link

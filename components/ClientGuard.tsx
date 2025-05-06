@@ -34,10 +34,10 @@ export default function ClientGuard({ children }: ClientGuardProps) {
 
   if (!allowed) {
     return (
-      <div className='flex h-screen items-center justify-center text-center'>
+      <div className='flex h-screen items-center justify-center text-center gap-2'>
         <div>
           <h1 className='text-5xl font-bold text-primary-300'>Access Denied</h1>
-          <p className='text-3xl text-neutral-25'>Redirecting to homepage...</p>
+          <p className='text-3xl text-neutral-25'>Redirecting to homepage</p>
         </div>
       </div>
     );
