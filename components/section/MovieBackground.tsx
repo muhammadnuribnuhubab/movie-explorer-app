@@ -29,7 +29,7 @@ export const MovieBackground = ({
       animate={{ opacity: 1 }}
       transition={{ duration: 1.2, ease: 'easeOut' }}
     >
-      <div className='relative w-full max-w-[1440px] aspect-[393/392] md:aspect-[16/9]'>
+      <div className='relative w-full  aspect-[393/392] md:aspect-[16/9]'>
         {/* Skeleton Loading */}
         {!isLoaded && (
           <div className='absolute inset-0 bg-neutral-800 animate-pulse rounded-md' />
@@ -49,7 +49,12 @@ export const MovieBackground = ({
         />
 
         {/* Overlay Gradient */}
-        <div className='absolute inset-0 bg-gradient-to-b from-transparent to-black/90' />
+        <motion.div
+          className='absolute inset-0 bg-gradient-to-b from-transparent via-black/60 to-black'
+          initial={{ opacity: 0 }}
+          animate={{ opacity: isLoaded ? 1 : 0 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+        />
       </div>
     </motion.div>
   );

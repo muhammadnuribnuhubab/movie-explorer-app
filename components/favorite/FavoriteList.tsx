@@ -40,21 +40,23 @@ export const FavoriteList = () => {
       <SectionTitle title='Favorites' className='mb-6 md:mb-8' />
 
       {favoriteMovies.length === 0 ? (
-        <div className='text-center text-white py-16'>
-          <EmptyContent
-            title='Data Empty'
-            description="You don't have a favorite movie yet"
-            imageSrc='/images/empty-content.svg'
-          />
-          <Link href='/'>
-            <Button className='mt-6 !h-[52px] !w-[300px]'>
-              Explore Movies
-            </Button>
-          </Link>
+        <div className='text-center text-white min-h-[85vh] flex items-center justify-center '>
+          <div>
+            <EmptyContent
+              title='Data Empty'
+              description="You don't have a favorite movie yet"
+              imageSrc='/images/empty-content.svg'
+            />
+            <Link href='/'>
+              <Button className='mt-6 !h-[52px] !w-[300px]'>
+                Explore Movies
+              </Button>
+            </Link>
+          </div>
         </div>
       ) : (
         <motion.div
-          className='flex flex-col gap-8'
+          className='flex flex-col gap-8  min-h-[85vh]'
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, ease: 'easeOut' }}

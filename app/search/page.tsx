@@ -10,7 +10,7 @@ import { ScrollButton } from '@/components/ui/ScrollButton';
 import { SectionTitle } from '@/components/section/SectionTitle';
 import { fetchExploreMore } from '@/lib/api/exploreMore';
 import { fetchTrendingMovies } from '@/lib/api/trending';
-import ClientGuard from '@/components/ClientGuard';
+// import ClientGuard from '@/components/ClientGuard';
 
 const MAX_BATCH_PAGES = 5;
 
@@ -136,7 +136,7 @@ const SearchPage = () => {
       )}
 
       {!query ? (
-        <div className='text-center text-white text-lg py-16'>
+        <div className='text-center text-white text-lg min-h-[85vh] flex justify-center items-center'>
           <EmptyContent
             title='No Search Query'
             description='Please enter a keyword to search movies.'
@@ -144,7 +144,7 @@ const SearchPage = () => {
           />
         </div>
       ) : searchResults.length === 0 ? (
-        <div className='text-center text-white text-lg py-16'>
+        <div className='text-center text-white text-lg min-h-[85vh] flex justify-center items-center'>
           <EmptyContent
             title='Data Not Found'
             description='Try other keywords'
@@ -186,9 +186,9 @@ const SearchPageWithSuspense = () => {
     <Suspense
       fallback={<div className='text-center py-16 text-white'>Loading...</div>}
     >
-      <ClientGuard>
+      {/* <ClientGuard> */}
         <SearchPage />
-      </ClientGuard>
+      {/* </ClientGuard> */}
     </Suspense>
   );
 };

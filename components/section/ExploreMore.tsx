@@ -111,7 +111,7 @@ export const ExploreMore = ({
   };
 
   return (
-    <section className={`mx-auto mt-12 max-w-[1180px] px-[18px] ${className}`}>
+    <section className={`mx-auto  max-w-[1180px] px-[18px] ${className}`}>
       <SectionTitle title={title} />
       <motion.div
         className='relative mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4'
@@ -145,7 +145,7 @@ export const ExploreMore = ({
       {isLoading && (
         <div className='text-center py-6 text-sm md:text-base text-neutral-25 animate-pulse'>
           <span className='inline-block mr-2 animate-spin'>🎬</span>
-          Loading new releases...
+          Loading...
         </div>
       )}
 

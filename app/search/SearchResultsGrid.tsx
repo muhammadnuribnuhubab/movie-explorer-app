@@ -37,7 +37,7 @@ export const SearchResultsGrid = ({
   }
 
   return (
-    <section className={`${className}`}>
+    <section className={`${className} min-h-[85vh] `}>
       <SectionTitle title={title} />
 
       <motion.div

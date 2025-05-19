@@ -180,7 +180,7 @@ export const Header = () => {
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 70, damping: 15 }}
-            className='fixed inset-0 bg-black bg-opacity-90 z-50 px-xl py-[16px] text-white md:hidden'
+            className='fixed inset-0 bg-black bg-opacity-90 z-[1000] px-xl py-[16px] text-white md:hidden'
           >
             <div className='flex justify-between items-center'>
               <Logo onClick={() => setState({ ...state, showNav: false })} />

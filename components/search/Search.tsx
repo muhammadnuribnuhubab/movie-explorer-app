@@ -118,7 +118,7 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
             onClick={clearSearch}
             className={`right-lg ${iconPositionClass}`}
           >
-            <RoundedCloseIcon className={`${iconSizeClass} text-neutral-25`} />
+            <RoundedCloseIcon className={`${iconSizeClass} text-neutral-25 cursor-pointer`} />
           </button>
         )}
       </div>

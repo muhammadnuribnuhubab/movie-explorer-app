@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { MovieDetail } from '@/components/section/MovieDetail';
 import { fetchMovieDetail } from '@/lib/api/movieDetail';
 import type { MovieDetailProps, MovieApiResponse } from '@/types/movie';
-import ClientGuard from '@/components/ClientGuard';
+// import ClientGuard from '@/components/ClientGuard';
 
 export default async function DetailPage({
   params,
@@ -63,8 +63,8 @@ export default async function DetailPage({
   };
 
   return (
-    <ClientGuard>
+    // <ClientGuard>
       <MovieDetail {...movieDetailProps} />
-    </ClientGuard>
+    // {/* </ClientGuard> */}
   );
 }
