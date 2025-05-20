@@ -21,7 +21,7 @@ export default async function HomePage() {
     : null;
 
   return (
-    <main className='mx-auto'>
+    <main className='mx-auto min-h-[85vh]'>
       {/* HeroBanner di-render server-side */}
       <HeroBanner movie={topMovie} trailerUrl={trailerUrl} />
 
