@@ -59,7 +59,7 @@ export const Footer = () => {
         </div>
 
         <small className='font-normal text-sm md:text-base text-neutral-25 text-center'>
-          © {new Date().getFullYear()} findcinéma. All rights reserved.
+          © {new Date().getFullYear()} findcinema. All rights reserved.
         </small>
       </div>
     </footer>
