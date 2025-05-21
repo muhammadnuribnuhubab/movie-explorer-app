@@ -111,7 +111,7 @@ export const ExploreMore = ({
   };
 
   return (
-    <section className={`mx-auto  max-w-[1180px] px-[18px] ${className}`}>
+    <section className={`mx-auto  max-w-[1180px] px-[18px] mt-6 ${className}`}>
       <SectionTitle title={title} />
       <motion.div
         className='relative mt-6 grid grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 gap-4'
