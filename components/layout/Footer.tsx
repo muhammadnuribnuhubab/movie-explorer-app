@@ -4,6 +4,7 @@ import React from 'react';
 import {
   EmailIcon,
   GitHubIcon,
+  GlobeIcon,
   InstagramIcon,
   LinkedInIcon,
   WhatsAppIcon,
@@ -15,6 +16,14 @@ export const Footer = () => {
     <footer className='max-w-[1160px] mx-auto w-full bg-black py-6 mt-10 md:mt-20 px-xl'>
       <div className=' mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center gap-2'>
         <div className='flex gap-2 md:gap-4'>
+          <Link
+            href='https://nuribnuu.vercel.app'
+            target='_blank'
+            rel='noopener noreferrer'
+            className='p-2 bg-neutral-25 rounded-md hover:bg-neutral-300 transition'
+          >
+            <GlobeIcon className='size-5 text-neutral-700' />
+          </Link>
           <Link
             href='https://github.com/nuribnuu'
             target='_blank'
